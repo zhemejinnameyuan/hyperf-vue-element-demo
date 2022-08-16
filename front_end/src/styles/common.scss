@@ -1,0 +1,21 @@
+.app-container {
+  //搜索框
+  .search-container{
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .el-select,.el-input{
+      padding-right: 5px;
+      padding-top: 5px;
+    }
+  }
+  .sub-title{
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #8492a6;
+  }
+  //分页
+  .pagination {
+    padding-top: 30px;
+  }
+}
