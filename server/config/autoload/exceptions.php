@@ -5,7 +5,7 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
@@ -17,7 +17,7 @@ return [
             App\Exception\Handler\JwtExceptionHandler::class, //Jwt异常监听
             App\Exception\Handler\BusinessExceptionHandler::class, //业务异常监听
             App\Exception\Handler\RateLimitExceptionHandler::class, //限流
-//            \Hyperf\ExceptionHandler\Handler\WhoopsExceptionHandler::class,//Whoops
+            //            \Hyperf\ExceptionHandler\Handler\WhoopsExceptionHandler::class,//Whoops
         ],
     ],
 ];

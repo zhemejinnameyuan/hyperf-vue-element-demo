@@ -5,11 +5,10 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
- * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 return [
     'default' => [
         'driver' => 'mysql',
@@ -19,7 +18,7 @@ return [
         'write' => [
             'host' => env('ADMIN_DB_HOSTNAME'),
         ],
-        'sticky'  => false,
+        'sticky' => false,
         'port' => env('ADMIN_DB_HOSTPORT'),
         'database' => env('ADMIN_DB_DATABASE'),
         'username' => env('ADMIN_DB_USERNAME'),

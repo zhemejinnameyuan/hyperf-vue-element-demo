@@ -1,21 +1,26 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Model\Admin;
-
 
 use App\Model\Model;
 
 /**
  * 内容表
- * Class TopArticleModel
- * @package App\Model\Boss
+ * Class TopArticleModel.
  */
 class TopArticleModel extends Model
 {
-
     /**
-     * 表名
+     * 表名.
      */
     protected $table = 'top_article';
 
@@ -25,6 +30,7 @@ class TopArticleModel extends Model
      * @var array
      */
     protected $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -34,7 +40,6 @@ class TopArticleModel extends Model
 
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
-
         $query = parent::query()
             ->join('site_config', function ($join) {
                 $join->on('top_article.site_id', '=', 'site_config.id');
@@ -50,11 +55,10 @@ class TopArticleModel extends Model
                 }
             });
 
-        $columns = ['site_config.name','top_article.*'];
+        $columns = ['site_config.name', 'top_article.*'];
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->get($columns)->toArray()
+            'data' => $query->forPage($page, $limit)->get($columns)->toArray(),
         ];
     }
-
 }

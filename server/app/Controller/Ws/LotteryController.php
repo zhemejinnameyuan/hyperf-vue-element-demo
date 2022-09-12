@@ -1,8 +1,15 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Controller\Ws;
-
 
 use App\Controller\AbstractController;
 use Hyperf\Contract\OnCloseInterface;
@@ -10,19 +17,16 @@ use Hyperf\Contract\OnMessageInterface;
 use Hyperf\Contract\OnOpenInterface;
 use Psr\Container\ContainerInterface;
 use Swoole\Http\Request;
-use Swoole\Server;
 use Swoole\Websocket\Frame;
-use Swoole\WebSocket\Server as WebSocketServer;
 
 /**
  * 彩票通知 websocket
- * Class LotteryController
- * @package App\Controller\Ws
+ * Class LotteryController.
  */
 class LotteryController extends AbstractController implements OnMessageInterface, OnOpenInterface, OnCloseInterface
 {
     /**
-     * redis key
+     * redis key.
      * @var string
      */
     protected $roomKey = 'ws:lottery';
@@ -30,17 +34,16 @@ class LotteryController extends AbstractController implements OnMessageInterface
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-
     }
+
     public function onOpen($server, Request $request): void
     {
-        echo "fd:" . $request->fd . "-is-opened" . PHP_EOL;
+        echo 'fd:' . $request->fd . '-is-opened' . PHP_EOL;
         $server->push($request->fd, 'Opened');
 
         //记录连接ID 到redis
         $this->redisClient->sAdd($this->roomKey, $request->fd);
     }
-
 
     public function onClose($server, int $fd, int $reactorId): void
     {
@@ -50,7 +53,6 @@ class LotteryController extends AbstractController implements OnMessageInterface
         var_dump('closed');
     }
 
-
     public function onMessage($server, Frame $frame): void
     {
         $roomKey = 'ws:lottery';
@@ -59,7 +61,5 @@ class LotteryController extends AbstractController implements OnMessageInterface
         foreach ($fds as $fd) {
             $server->push($fd, 'send: ' . $frame->data);
         }
-
-
     }
 }

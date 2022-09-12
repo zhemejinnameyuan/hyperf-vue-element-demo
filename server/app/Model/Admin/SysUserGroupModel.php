@@ -1,21 +1,26 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Model\Admin;
-
 
 use App\Model\Model;
 
 /**
  * 用户权限组
- * Class SysUserModel
- * @package App\Model\Boss
+ * Class SysUserModel.
  */
 class SysUserGroupModel extends Model
 {
-
     /**
-     * 表名
+     * 表名.
      */
     protected $table = 'sys_user_group';
 
@@ -25,6 +30,7 @@ class SysUserGroupModel extends Model
      * @var array
      */
     protected $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -33,16 +39,11 @@ class SysUserGroupModel extends Model
     protected $casts = [];
 
     /**
-     * 获取数据
-     * @param array $where
-     * @param int $page
-     * @param int $limit
-     * @return array
+     * 获取数据.
      */
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
         $query = parent::query()->where(function ($query) use ($where) {
-
             if (isset($where['status']) && $where['status'] > -1) {
                 $query->where('status', $where['status']);
             }
@@ -50,8 +51,7 @@ class SysUserGroupModel extends Model
 
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->orderBy('id', 'asc')->get()
+            'data' => $query->forPage($page, $limit)->orderBy('id', 'asc')->get(),
         ];
     }
-
 }

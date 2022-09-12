@@ -1,50 +1,55 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Amqp\Consumer;
 
 use App\Model\Admin\FundCcmxModel;
-use Hyperf\Amqp\Result;
 use Hyperf\Amqp\Annotation\Consumer;
 use Hyperf\Amqp\Message\ConsumerMessage;
+use Hyperf\Amqp\Result;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Redis\RedisFactory;
 use PhpAmqpLib\Message\AMQPMessage;
 use QL\QueryList;
 
 /**
- * 基金持仓明细 消费者
- * @Consumer(exchange="hyperf-fundccmx", routingKey="hyperf-fundccmx", queue="hyperf-fundccmx", name ="FundCcmxConsumer", nums=1)
+ * 基金持仓明细 消费者.
+ * @Consumer(exchange="hyperf-fundccmx", routingKey="hyperf-fundccmx", queue="hyperf-fundccmx", name="FundCcmxConsumer", nums=1)
  */
 class FundCcmxConsumer extends ConsumerMessage
 {
-
     /**
-     * @Inject()
-     * @var QueryList
-     */
-    protected $queryList;
-
-    /**
-     * redis客户端
+     * redis客户端.
      * @var RedisFactory
      */
     public $redisClient;
+
+    /**
+     * @Inject
+     * @var QueryList
+     */
+    protected $queryList;
 
     public function consumeMessage($data, AMQPMessage $message): string
     {
         $res = $this->handle($data['code']);
 
-        if($res){
+        if ($res) {
             return Result::ACK;
-        }else{
-            return Result::NACK;
         }
+        return Result::NACK;
     }
 
     /**
-     * 处理数据
+     * 处理数据.
      * @param $fundCode
      * @return bool
      */
@@ -53,34 +58,30 @@ class FundCcmxConsumer extends ConsumerMessage
         $this->redisClient = $this->container->get(RedisFactory::class)->get('default');
         $fundCcmxRedisKey = 'fund_ccmx';
         try {
-            if (!$fundCode) {
+            if (! $fundCode) {
                 throw new \Exception('缺少参数');
             }
             if ($this->redisClient->hGet($fundCcmxRedisKey, $fundCode)) {
                 throw new \Exception('已经执行过了');
             }
 
-
             $url = 'http://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code=' . $fundCode . '&topline=20';
             $content = $this->queryList->get($url);
 
-            $codeArr = $content->find('.box')->eq(0)->find("tbody tr .toc")->find('a')->texts()->all();
+            $codeArr = $content->find('.box')->eq(0)->find('tbody tr .toc')->find('a')->texts()->all();
 
             $reportDate = $content->find('.box')->eq(0)->find('.px12')->eq(0)->text();
 
-
             $returnArr = [];
-            if (!$codeArr) {
-                $codeArr = $content->find('.box')->eq(0)->find("tbody tr ")->find('a')->texts()->all();
+            if (! $codeArr) {
+                $codeArr = $content->find('.box')->eq(0)->find('tbody tr ')->find('a')->texts()->all();
 
                 if ($codeArr) {
                     $returnArr = array_chunk($codeArr, 6);
                 }
-
             } else {
                 $returnArr = array_chunk($codeArr, 2);
             }
-
 
             $newArr = [];
             foreach ($returnArr as $key => $value) {
@@ -102,6 +103,5 @@ class FundCcmxConsumer extends ConsumerMessage
         } catch (\Exception $exception) {
             return false;
         }
-
     }
 }

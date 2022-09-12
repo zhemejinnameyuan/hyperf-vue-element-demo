@@ -1,14 +1,20 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Controller\Api\Demo;
 
 use App\Amqp\Producer\FundCcmxProducer;
 use App\Controller\AbstractController;
 use App\Model\Admin\FundCcmxModel;
 use App\Model\Admin\FundConfModel;
-use App\Model\Admin\SysMenuModel;
 use FFI\Exception;
 use Hyperf\Amqp\Producer;
 use Hyperf\Di\Annotation\Inject;
@@ -28,27 +34,24 @@ use QL\QueryList;
 class FundController extends AbstractController
 {
     /**
-     * @Inject()
+     * @Inject
      * @var QueryList
      */
     protected $queryList;
 
     /**
-     * @Inject()
+     * @Inject
      * @var Producer
      */
     protected $producer;
 
-
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-
     }
 
     /**
-     * 基金-获取分页数据
-     * @return object
+     * 基金-获取分页数据.
      */
     public function fundDataList(): object
     {
@@ -59,8 +62,7 @@ class FundController extends AbstractController
     }
 
     /**
-     * 查询持仓明细
-     * @return object
+     * 查询持仓明细.
      */
     public function fundCcmx(): object
     {
@@ -70,20 +72,19 @@ class FundController extends AbstractController
         return response_success('success', $dataList);
     }
 
-
     /**
-     * 解析基金配置 并入库
+     * 解析基金配置 并入库.
      */
     public function format(): array
     {
         $url = 'http://fund.eastmoney.com/allfund.html';
         $htmlContent = $this->queryList->get($url)->getHtml();
-        $titleArr = $htmlContent->find("#code_content .num_right")->texts()->all();
+        $titleArr = $htmlContent->find('#code_content .num_right')->texts()->all();
 
         $title = str_replace(' 基金吧 |', '', $titleArr[0]);
         $title = str_replace('档案', '', $title);
 
-        $arr = explode("|", $title);
+        $arr = explode('|', $title);
 
         $newArr = [];
 
@@ -97,12 +98,11 @@ class FundController extends AbstractController
                 //写入数据库
                 $data = [
                     'code' => $code,
-                    'name' => $name
+                    'name' => $name,
                 ];
                 try {
                     FundConfModel::insertData($data);
                 } catch (Exception $exception) {
-
                 }
             }
         }
@@ -110,8 +110,7 @@ class FundController extends AbstractController
     }
 
     /**
-     * 将基金加入到持仓明细队列
-     * @return string
+     * 将基金加入到持仓明细队列.
      */
     public function handleCcmx(): string
     {

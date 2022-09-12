@@ -1,16 +1,22 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Request;
-
 
 use Hyperf\Validation\Request\FormRequest;
 
 class AesRequest extends FormRequest
 {
     protected $scenes = [
-        'update' => ['name','url','startTime','endTime','age','account'],
+        'update' => ['name', 'url', 'startTime', 'endTime', 'age', 'account'],
         'delete' => ['id'],
     ];
 
@@ -34,8 +40,7 @@ class AesRequest extends FormRequest
             'startTime' => 'required|date|after:today',
             'endTime' => 'required|date|after:startTime',
             'age' => 'required|digits_between:1,5',
-            'account'=> 'required|exists:sys_user,username',
+            'account' => 'required|exists:sys_user,username',
         ];
     }
-
 }

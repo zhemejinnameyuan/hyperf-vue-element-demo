@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Crontab;
 
 use App\Model\Admin\SiteConfigModel;
@@ -10,30 +19,24 @@ use Hyperf\Di\Annotation\Inject;
 use Psr\Container\ContainerInterface;
 
 /**
- *
- * @Crontab(name="采集top排行榜",rule="* * * * * *",callback="index",memo="getTopArticle")
+ * @Crontab(name="采集top排行榜", rule="* * * * * *", callback="index", memo="getTopArticle")
  * Class GetTopArticle
- * @package App\Crontab
  */
 class GetTopArticle
 {
-
-
     /**
-     * 各个网站的service
-     * @Inject()
+     * 各个网站的service.
+     * @Inject
      * @var TopArticleService
      */
     protected $topArticleService;
 
-
     public function __construct(ContainerInterface $container)
     {
-
     }
 
     /**
-     * 入口
+     * 入口.
      */
     public function index(): void
     {
@@ -48,12 +51,12 @@ class GetTopArticle
     }
 
     /**
-     * 执行入口
+     * 执行入口.
      * @param $siteInfo
      */
     public function execute($siteInfo): void
     {
-        if (!method_exists($this->topArticleService, $siteInfo['english_name'])) {
+        if (! method_exists($this->topArticleService, $siteInfo['english_name'])) {
             logger('crontab.GetTopArticle.index')->error("{$siteInfo['english_name']} not exists ");
         }
         $data = $this->topArticleService->{$siteInfo['english_name']}($siteInfo);
@@ -63,7 +66,7 @@ class GetTopArticle
                 $saveData = [
                     'title' => $title,
                     'url' => $url,
-                    'site_id' => $siteInfo['id']
+                    'site_id' => $siteInfo['id'],
                 ];
 
                 try {
@@ -73,6 +76,5 @@ class GetTopArticle
                 }
             }
         }
-
     }
 }

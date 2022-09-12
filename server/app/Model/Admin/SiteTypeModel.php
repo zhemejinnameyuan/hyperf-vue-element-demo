@@ -1,22 +1,26 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Model\Admin;
 
-
-use App\Constants\UserCode;
 use App\Model\Model;
 
 /**
  * 站点-分类
- * Class SysUserModel
- * @package App\Model\Boss
+ * Class SysUserModel.
  */
 class SiteTypeModel extends Model
 {
-
     /**
-     * 表名
+     * 表名.
      */
     protected $table = 'site_type';
 
@@ -26,6 +30,7 @@ class SiteTypeModel extends Model
      * @var array
      */
     protected $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -33,13 +38,8 @@ class SiteTypeModel extends Model
      */
     protected $casts = [];
 
-
     /**
-     * 获取数据列表
-     * @param array $where
-     * @param int $page
-     * @param int $limit
-     * @return array
+     * 获取数据列表.
      */
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
@@ -51,20 +51,15 @@ class SiteTypeModel extends Model
 
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->orderBy('id', 'desc')->get()
+            'data' => $query->forPage($page, $limit)->orderBy('id', 'desc')->get(),
         ];
     }
 
-
     /**
-     * 更新用户信息
-     * @param int $id
-     * @param array $save
+     * 更新用户信息.
      */
     protected static function updateInfo(int $id, array $save): void
     {
         parent::query()->where('id', $id)->update($save);
     }
-
-
 }

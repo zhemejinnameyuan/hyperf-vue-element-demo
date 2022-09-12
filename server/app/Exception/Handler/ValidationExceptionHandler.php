@@ -5,24 +5,20 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Exception\Handler;
-
 
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\Validation\ValidationException;
-use Hyperf\Validation\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 /**
  * 验证器 异常类
- * Class ValidationExceptionHandler
- * @package App\Exception\Handler
+ * Class ValidationExceptionHandler.
  */
 class ValidationExceptionHandler extends ExceptionHandler
 {

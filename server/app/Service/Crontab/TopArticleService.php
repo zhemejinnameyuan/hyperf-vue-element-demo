@@ -1,59 +1,42 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Service\Crontab;
-
 
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Guzzle\ClientFactory;
 use QL\QueryList;
 
 /**
- * Class TopArticleService
- * @package App\Service\Crontab
- * 知乎：https://www.zhihu.com/hot
- * 微博：https://s.weibo.com/top/summary
- * it之家：https://www.ithome.com/
- * V2EX：https://www.v2ex.com/?tab=hot
- * 贴吧：http://tieba.baidu.com/hottopic/browse/topicList
- * 豆瓣：https://www.douban.com/group/explore
- * 天涯：http://bbs.tianya.cn/list.jsp?item=funinfo&grade=3&order=1
- * 虎扑：https://bbs.hupu.com/all-gambia
- * Github：https://github.com/trending
- * baidu：http://top.baidu.com/buzz?b=341&c=513&fr=topbuzz_b1
- * 36氪：https://36kr.com/
- * 好奇心：https://www.qdaily.com/tags/29.html
- * 果壳：https://www.guokr.com/scientific/
- * 虎嗅：https://www.huxiu.com/article
- * 豆瓣电影：https://movie.douban.com/
- * 知乎日报：http://daily.zhihu.com/
- * segmentfault：https://segmentfault.com/hottest
- * 好玩：https://hacpai.com/domain/play
- * 网易：http://news.163.com/special/0001386F/rank_whole.html
- * csdn：https://www.csdn.net/
- * 微信：https://weixin.sogou.com/?pid=sogou-wsse-721e049e9903c3a7&kw=
- * 抽屉： https://dig.chouti.com/
+ * Class TopArticleService.
  */
 class TopArticleService
 {
     /**
-     * http客户端
-     * @Inject()
+     * http客户端.
+     * @Inject
      * @var ClientFactory
      */
     protected $guzzleHttpClient;
 
     /**
-     * queryList 类
-     * @Inject()
+     * queryList 类.
+     * @Inject
      * @var QueryList
      */
     protected $queryList;
 
     /**
-     * 百度
+     * 百度.
      * @param array $siteInfo
-     * @return array
      */
     public function baidu($siteInfo = []): array
     {
@@ -61,8 +44,8 @@ class TopArticleService
             logger('crontab.GetTopArticle.baidu')->info('start');
             $htmlContent = $this->queryList->get('http://news.baidu.com');
 
-            $titleArr = $htmlContent->find("#pane-news li a")->texts()->all();
-            $hrefArr = $htmlContent->find("#pane-news li a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('#pane-news li a')->texts()->all();
+            $hrefArr = $htmlContent->find('#pane-news li a')->attrs('href')->all();
 
             $topList = array_combine($titleArr, $hrefArr);
         } catch (\Exception $exception) {
@@ -74,9 +57,8 @@ class TopArticleService
     }
 
     /**
-     * v2ex
+     * v2ex.
      * @param array $siteInfo
-     * @return array
      */
     public function v2ex($siteInfo = []): array
     {
@@ -84,13 +66,13 @@ class TopArticleService
             logger('crontab.GetTopArticle.v2ex')->info('start');
             $htmlContent = $this->queryList->get('https://www.v2ex.com/?tab=hot');
 
-            $titleArr = $htmlContent->find(".box .item .item_title a")->texts()->all();
-            $hrefArr = $htmlContent->find(".box .item .item_title a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.box .item .item_title a')->texts()->all();
+            $hrefArr = $htmlContent->find('.box .item .item_title a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
                 //去掉url#reply
                 preg_match_all('/^(.*?)#reply\d+/', $path, $matchs);
-                return "https://www.v2ex.com" . $matchs[1][0];
+                return 'https://www.v2ex.com' . $matchs[1][0];
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
@@ -103,9 +85,8 @@ class TopArticleService
     }
 
     /**
-     * 网易
+     * 网易.
      * @param array $siteInfo
-     * @return array
      */
     public function netEasy($siteInfo = []): array
     {
@@ -125,10 +106,10 @@ class TopArticleService
             $content = $this->guzzleHttpClient->create($options)->get('/rank')->getBody();
 
             //编码转换
-            $content = iconv("GBK//IGNORE", "UTF-8", $content);
+            $content = iconv('GBK//IGNORE', 'UTF-8', $content);
 
-            $hrefArr = $this->queryList->html($content)->find("table")->eq(0)->find('a')->attrs('href')->all();
-            $titleArr = $this->queryList->html($content)->find("table")->eq(0)->find('a')->texts()->all();
+            $hrefArr = $this->queryList->html($content)->find('table')->eq(0)->find('a')->attrs('href')->all();
+            $titleArr = $this->queryList->html($content)->find('table')->eq(0)->find('a')->texts()->all();
 
             $topList = array_combine($titleArr, $hrefArr);
         } catch (\Exception $exception) {
@@ -139,9 +120,8 @@ class TopArticleService
     }
 
     /**
-     * 微博热搜
+     * 微博热搜.
      * @param array $siteInfo
-     * @return array
      */
     public function weibo($siteInfo = []): array
     {
@@ -149,11 +129,11 @@ class TopArticleService
             logger('crontab.GetTopArticle.weibo')->info('start');
             $htmlContent = $this->queryList->get('https://s.weibo.com/top/summary');
 
-            $titleArr = $htmlContent->find("#pl_top_realtimehot table a")->texts()->all();
-            $hrefArr = $htmlContent->find("#pl_top_realtimehot table a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('#pl_top_realtimehot table a')->texts()->all();
+            $hrefArr = $htmlContent->find('#pl_top_realtimehot table a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://s.weibo.com" . $path;
+                return 'https://s.weibo.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
@@ -166,19 +146,17 @@ class TopArticleService
     }
 
     /**
-     * it之家
+     * it之家.
      * @param array $siteInfo
-     * @return array
      */
     public function itHome($siteInfo = []): array
     {
-
         try {
             logger('crontab.GetTopArticle.itHome')->info('start');
             $htmlContent = $this->queryList->get('https://www.ithome.com/blog/');
 
-            $titleArr = $htmlContent->find(".bl li .c h2 a")->texts()->all();
-            $hrefArr = $htmlContent->find(".bl li .c h2 a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.bl li .c h2 a')->texts()->all();
+            $hrefArr = $htmlContent->find('.bl li .c h2 a')->attrs('href')->all();
 
             $topList = array_combine($titleArr, $hrefArr);
         } catch (\Exception $exception) {
@@ -191,9 +169,8 @@ class TopArticleService
     }
 
     /**
-     * 知乎
+     * 知乎.
      * @param array $siteInfo
-     * @return array
      */
     public function zhihu($siteInfo = []): array
     {
@@ -205,13 +182,13 @@ class TopArticleService
                 [],
                 [
                     'headers' => [
-                        'Cookie' => $cookie
-                    ]
+                        'Cookie' => $cookie,
+                    ],
                 ]
             );
 
-            $titleArr = $htmlContent->find(".HotItem-content a")->attrs('title')->all();
-            $hrefArr = $htmlContent->find(".HotItem-content a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.HotItem-content a')->attrs('title')->all();
+            $hrefArr = $htmlContent->find('.HotItem-content a')->attrs('href')->all();
 
             $topList = array_combine($titleArr, $hrefArr);
         } catch (\Exception $exception) {
@@ -222,9 +199,8 @@ class TopArticleService
     }
 
     /**
-     * 36kr
+     * 36kr.
      * @param array $siteInfo
-     * @return array
      */
     public function sanliukr($siteInfo = []): array
     {
@@ -232,11 +208,11 @@ class TopArticleService
             logger('crontab.GetTopArticle.36kr')->info('start');
             $htmlContent = $this->queryList->get('https://36kr.com/hot-list/catalog');
 
-            $titleArr = $htmlContent->find(".article-list .title-wrapper a")->texts()->all();
-            $hrefArr = $htmlContent->find(".article-list .title-wrapper a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.article-list .title-wrapper a')->texts()->all();
+            $hrefArr = $htmlContent->find('.article-list .title-wrapper a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://36kr.com" . $path;
+                return 'https://36kr.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
@@ -250,9 +226,8 @@ class TopArticleService
     }
 
     /**
-     * 豆瓣
+     * 豆瓣.
      * @param array $siteInfo
-     * @return array
      */
     public function douban($siteInfo = []): array
     {
@@ -260,8 +235,8 @@ class TopArticleService
             logger('crontab.GetTopArticle.douban')->info('start');
             $htmlContent = $this->queryList->get('https://www.douban.com/group/explore');
 
-            $titleArr = $htmlContent->find(".article .channel-item a")->texts()->all();
-            $hrefArr = $htmlContent->find(".article .channel-item a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.article .channel-item a')->texts()->all();
+            $hrefArr = $htmlContent->find('.article .channel-item a')->attrs('href')->all();
 
             $topList = array_combine($titleArr, $hrefArr);
         } catch (\Exception $exception) {
@@ -274,9 +249,8 @@ class TopArticleService
     }
 
     /**
-     * 天涯
+     * 天涯.
      * @param array $siteInfo
-     * @return array
      */
     public function tianya($siteInfo = []): array
     {
@@ -284,11 +258,11 @@ class TopArticleService
             logger('crontab.GetTopArticle.tianya')->info('start');
             $htmlContent = $this->queryList->get('http://bbs.tianya.cn/list.jsp?item=funinfo&grade=3&order=1');
 
-            $titleArr = $htmlContent->find(".mt5 .td-title a")->texts()->all();
-            $hrefArr = $htmlContent->find(".mt5 .td-title a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.mt5 .td-title a')->texts()->all();
+            $hrefArr = $htmlContent->find('.mt5 .td-title a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "http://bbs.tianya.cn" . $path;
+                return 'http://bbs.tianya.cn' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
@@ -304,7 +278,6 @@ class TopArticleService
     /**
      * 微信
      * @param array $siteInfo
-     * @return array
      */
     public function weixin($siteInfo = []): array
     {
@@ -312,11 +285,10 @@ class TopArticleService
             logger('crontab.GetTopArticle.weixin')->info('start');
             $htmlContent = $this->queryList->get('https://weixin.sogou.com/?pid=sogou-wsse-721e049e9903c3a7&kw=');
 
-            $titleArr = $htmlContent->find(".news-list li h3 a")->texts()->all();
-            $hrefArr = $htmlContent->find(".news-list li h3 a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.news-list li h3 a')->texts()->all();
+            $hrefArr = $htmlContent->find('.news-list li h3 a')->attrs('href')->all();
 
             $topList = array_combine($titleArr, $hrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.weixin')->error($exception->getMessage());
 
@@ -327,9 +299,8 @@ class TopArticleService
     }
 
     /**
-     * csdn
+     * csdn.
      * @param array $siteInfo
-     * @return array
      */
     public function csdn($siteInfo = []): array
     {
@@ -337,12 +308,11 @@ class TopArticleService
             logger('crontab.GetTopArticle.csdn')->info('start');
             $htmlContent = $this->queryList->get('https://blog.csdn.net/phoenix/web/blog/hotRank?page=0&pageSize=25&child_channel=')->getHtml();
 
-            $content = json_decode($htmlContent,true)['data'];
+            $content = json_decode($htmlContent, true)['data'];
 
-            $titleArr = array_column($content,'articleTitle');
-            $hrefArr = array_column($content,'articleDetailUrl');
+            $titleArr = array_column($content, 'articleTitle');
+            $hrefArr = array_column($content, 'articleDetailUrl');
             $topList = array_combine($titleArr, $hrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.csdn')->error($exception->getMessage());
 
@@ -353,9 +323,8 @@ class TopArticleService
     }
 
     /**
-     * segmentfault
+     * segmentfault.
      * @param array $siteInfo
-     * @return array
      */
     public function segmentfault($siteInfo = []): array
     {
@@ -363,15 +332,14 @@ class TopArticleService
             logger('crontab.GetTopArticle.segmentfault')->info('start');
             $htmlContent = $this->queryList->get('https://segmentfault.com/hottest');
 
-            $titleArr = $htmlContent->find(".news-list .news__item-title")->texts()->all();
-            $hrefArr = $htmlContent->find(".news-list .news__item-title")->parent()->parent()->attrs("href")->all();
+            $titleArr = $htmlContent->find('.news-list .news__item-title')->texts()->all();
+            $hrefArr = $htmlContent->find('.news-list .news__item-title')->parent()->parent()->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://segmentfault.com" . $path;
+                return 'https://segmentfault.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.segmentfault')->error($exception->getMessage());
 
@@ -382,9 +350,8 @@ class TopArticleService
     }
 
     /**
-     * 虎嗅
+     * 虎嗅.
      * @param array $siteInfo
-     * @return array
      */
     public function huxiu($siteInfo = []): array
     {
@@ -392,15 +359,14 @@ class TopArticleService
             logger('crontab.GetTopArticle.huxiu')->info('start');
             $htmlContent = $this->queryList->get('https://www.huxiu.com/article/');
 
-            $titleArr = $htmlContent->find(".article-items .article-item__img img")->attrs("alt")->all();
-            $hrefArr = $htmlContent->find(".article-items .article-item__img")->parent()->attrs("href")->all();
+            $titleArr = $htmlContent->find('.article-items .article-item__img img')->attrs('alt')->all();
+            $hrefArr = $htmlContent->find('.article-items .article-item__img')->parent()->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://www.huxiu.com" . $path;
+                return 'https://www.huxiu.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.huxiu')->error($exception->getMessage());
 
@@ -411,9 +377,8 @@ class TopArticleService
     }
 
     /**
-     * 果壳
+     * 果壳.
      * @param array $siteInfo
-     * @return array
      */
     public function guokr($siteInfo = []): array
     {
@@ -421,31 +386,27 @@ class TopArticleService
             logger('crontab.GetTopArticle.guokr')->info('start');
             $htmlContent = $this->queryList->get('https://www.guokr.com/');
 
-            $titleArr = $htmlContent->find("#app .Banner__BannerWrap-sc-1vqe6cg-0 a")->texts()->all();
-            $hrefArr = $htmlContent->find("#app .Banner__BannerWrap-sc-1vqe6cg-0 a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('#app .Banner__BannerWrap-sc-1vqe6cg-0 a')->texts()->all();
+            $hrefArr = $htmlContent->find('#app .Banner__BannerWrap-sc-1vqe6cg-0 a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://www.guokr.com" . $path;
+                return 'https://www.guokr.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.guokr')->error($exception->getMessage());
 
             $topList = [];
         }
 
-
         return $topList;
     }
 
-
     /**
- * github
- * @param array $siteInfo
- * @return array
- */
+     * github.
+     * @param array $siteInfo
+     */
     public function github($siteInfo = []): array
     {
         try {
@@ -453,30 +414,26 @@ class TopArticleService
             $htmlContent = $this->queryList->get('https://github.com/trending');
 
 //            $titleArr = $htmlContent->find(".Box .Box-row  .col-9")->texts()->all();
-            $titleArr = $htmlContent->find(".Box .Box-row .lh-condensed a")->attrs('href')->all();
-            $hrefArr = $htmlContent->find(".Box .Box-row .lh-condensed a")->attrs('href')->all();
-
+            $titleArr = $htmlContent->find('.Box .Box-row .lh-condensed a')->attrs('href')->all();
+            $hrefArr = $htmlContent->find('.Box .Box-row .lh-condensed a')->attrs('href')->all();
 
             $newHrefArr = array_map(function ($path) {
-                return "https://www.github.com" . $path;
+                return 'https://www.github.com' . $path;
             }, $hrefArr);
 
             $topList = diy_array_combine($titleArr, $newHrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.github')->error($exception->getMessage());
 
             $topList = [];
         }
 
-
         return $topList;
     }
 
     /**
-     * 虎扑
+     * 虎扑.
      * @param array $siteInfo
-     * @return array
      */
     public function hupu($siteInfo = []): array
     {
@@ -484,29 +441,25 @@ class TopArticleService
             logger('crontab.GetTopArticle.hupu')->info('start');
             $htmlContent = $this->queryList->get('https://bbs.hupu.com/all-gambia');
 
-            $titleArr = $htmlContent->find(".list-item-wrap .t-title")->texts()->all();
-            $hrefArr = $htmlContent->find(".list-item-wrap .t-info a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.list-item-wrap .t-title')->texts()->all();
+            $hrefArr = $htmlContent->find('.list-item-wrap .t-info a')->attrs('href')->all();
             $newHrefArr = array_map(function ($path) {
-                return "https://bbs.hupu.com" . $path;
+                return 'https://bbs.hupu.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
-
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.hupu')->error($exception->getMessage());
 
             $topList = [];
         }
 
-
         return $topList;
     }
 
     /**
-     * 好奇心日报
+     * 好奇心日报.
      * @param array $siteInfo
-     * @return array
      */
     public function qdaily($siteInfo = []): array
     {
@@ -514,30 +467,25 @@ class TopArticleService
             logger('crontab.GetTopArticle.qdaily')->info('start');
             $htmlContent = $this->queryList->get('http://www.qdaily.com/tags/29.html');
 
-            $titleArr = $htmlContent->find(".page-content .packery-item .title")->texts()->all();
-            $hrefArr = $htmlContent->find(".page-content .packery-item a")->attrs('href')->all();
+            $titleArr = $htmlContent->find('.page-content .packery-item .title')->texts()->all();
+            $hrefArr = $htmlContent->find('.page-content .packery-item a')->attrs('href')->all();
             $newHrefArr = array_map(function ($path) {
-                return "http://www.qdaily.com" . $path;
+                return 'http://www.qdaily.com' . $path;
             }, $hrefArr);
 
             $topList = array_combine($titleArr, $newHrefArr);
-
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.qdaily')->error($exception->getMessage());
 
             $topList = [];
         }
 
-
         return $topList;
     }
 
-
     /**
-     * csdn
+     * csdn.
      * @param array $siteInfo
-     * @return array
      */
     public function tieba($siteInfo = []): array
     {
@@ -545,12 +493,11 @@ class TopArticleService
             logger('crontab.GetTopArticle.tieba')->info('start');
             $htmlContent = $this->queryList->get('http://tieba.baidu.com/hottopic/browse/topicList')->getHtml();
 
-            $content = json_decode($htmlContent,true)['data']['bang_topic']['topic_list'];
+            $content = json_decode($htmlContent, true)['data']['bang_topic']['topic_list'];
 
-            $titleArr = array_column($content,'topic_name');
-            $hrefArr = array_column($content,'topic_url');
+            $titleArr = array_column($content, 'topic_name');
+            $hrefArr = array_column($content, 'topic_url');
             $topList = array_combine($titleArr, $hrefArr);
-
         } catch (\Exception $exception) {
             logger('crontab.GetTopArticle.tieba')->error($exception->getMessage());
 

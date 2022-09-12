@@ -1,7 +1,14 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Controller\Api\Demo;
 
 use App\Controller\AbstractController;
@@ -17,24 +24,20 @@ use Psr\Container\ContainerInterface;
  */
 class CrontabController extends AbstractController
 {
-
     /**
-     * 各个网站的service
-     * @Inject()
+     * 各个网站的service.
+     * @Inject
      * @var TopArticleService
      */
     protected $topArticleService;
 
-
-
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-
     }
 
     /**
-     * 入口
+     * 入口.
      */
     public function index(): void
     {
@@ -49,12 +52,12 @@ class CrontabController extends AbstractController
     }
 
     /**
-     * 执行入口
+     * 执行入口.
      * @param $siteInfo
      */
     public function execute($siteInfo): void
     {
-        if (!method_exists($this->topArticleService, $siteInfo['english_name'])) {
+        if (! method_exists($this->topArticleService, $siteInfo['english_name'])) {
             logger('crontab.GetTopArticle.index')->error("{$siteInfo['english_name']} not exists ");
         }
         $data = $this->topArticleService->{$siteInfo['english_name']}($siteInfo);
@@ -64,7 +67,7 @@ class CrontabController extends AbstractController
                 $saveData = [
                     'title' => $title,
                     'url' => $url,
-                    'site_id' => $siteInfo['id']
+                    'site_id' => $siteInfo['id'],
                 ];
 
                 try {
@@ -74,6 +77,5 @@ class CrontabController extends AbstractController
                 }
             }
         }
-
     }
 }

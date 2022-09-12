@@ -5,13 +5,11 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
- * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller;
-
 
 use App\Exception\ValidationException;
 use App\Model\Admin\OpLogModel;
@@ -27,40 +25,40 @@ use Psr\Container\ContainerInterface;
 abstract class AbstractController
 {
     /**
-     * 容器
+     * 容器.
      * @var ContainerInterface
      */
     public $container;
 
     /**
      * 请求
-     * @Inject()
+     * @Inject
      * @var RequestInterface
      */
     public $request;
 
     /**
-     * 响应
-     * @Inject()
+     * 响应.
+     * @Inject
      * @var ResponseInterface
      */
     public $response;
 
     /**
-     * redis客户端
+     * redis客户端.
      * @var RedisFactory
      */
     public $redisClient;
 
     /**
-     * @Inject()
+     * @Inject
      * @var JWT
      */
     public $jwt;
 
     /**
-     * 验证器
-     * @Inject()
+     * 验证器.
+     * @Inject
      * @var ValidatorFactoryInterface
      */
     public $validationFactory;
@@ -81,7 +79,7 @@ abstract class AbstractController
     }
 
     /**
-     * 获取每页显示数量
+     * 获取每页显示数量.
      */
     public function getLimit(): int
     {
@@ -89,27 +87,7 @@ abstract class AbstractController
     }
 
     /**
-     * 获取用户id
-     */
-    protected function getUserId(): int
-    {
-        $userInfo = $this->jwt->getParserData();
-        return $userInfo ? (int)$userInfo['user_id'] : 0;
-    }
-
-    /**
-     * 获取用户名
-     */
-    protected function getUserName(): string
-    {
-        $userInfo = $this->jwt->getParserData();
-
-        return $userInfo['username'] ?: '';
-    }
-
-
-    /**
-     * 写日志
+     * 写日志.
      * @param int $business_type 业务类型
      * @param int $business_id 业务id
      * @param string $content 日志内容
@@ -129,7 +107,46 @@ abstract class AbstractController
     }
 
     /**
-     * 初始化配置
+     * 验证器.
+     * @param $rules
+     * @param $messages
+     */
+    public function validationCheck(array $rules, array $messages): void
+    {
+        $validator = $this->validationFactory->make(
+            $this->request->all(),
+            $rules,
+            $messages
+        );
+
+        if ($validator->fails()) {
+            $errorMessage = $validator->errors()->first();
+
+            throw new ValidationException($errorMessage, 500);
+        }
+    }
+
+    /**
+     * 获取用户id.
+     */
+    protected function getUserId(): int
+    {
+        $userInfo = $this->jwt->getParserData();
+        return $userInfo ? (int) $userInfo['user_id'] : 0;
+    }
+
+    /**
+     * 获取用户名.
+     */
+    protected function getUserName(): string
+    {
+        $userInfo = $this->jwt->getParserData();
+
+        return $userInfo['username'] ?: '';
+    }
+
+    /**
+     * 初始化配置.
      */
     protected static function initConfig(): void
     {
@@ -149,30 +166,9 @@ abstract class AbstractController
                     }
                 }
 
-                logger('config')->info("config init", ['key' => $configKey, 'value' => $configValue]);
+                logger('config')->info('config init', ['key' => $configKey, 'value' => $configValue]);
                 config_set($configKey, $configValue);
             }
         }
     }
-
-    /**
-     * 验证器
-     * @param $rules
-     * @param $messages
-     */
-    public function validationCheck(array $rules, array $messages): void
-    {
-        $validator = $this->validationFactory->make(
-            $this->request->all(),
-            $rules,
-            $messages
-        );
-
-        if ($validator->fails()) {
-            $errorMessage = $validator->errors()->first();
-
-            throw new ValidationException($errorMessage, 500);
-        }
-    }
-
 }

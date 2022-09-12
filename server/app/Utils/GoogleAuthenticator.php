@@ -1,14 +1,14 @@
 <?php
-/**
- * PHP Class for handling Google Authenticator 2-factor authentication.
- *
- * @author Michael Kliewe
- * @copyright 2012 Michael Kliewe
- * @license http://www.opensource.org/licenses/bsd-license.php BSD License
- *
- * @link http://www.phpgangsta.de/
- */
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Utils;
 
 class GoogleAuthenticator
@@ -39,7 +39,7 @@ class GoogleAuthenticator
             $rnd = mcrypt_create_iv($secretLength, MCRYPT_DEV_URANDOM);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $rnd = openssl_random_pseudo_bytes($secretLength, $cryptoStrong);
-            if (!$cryptoStrong) {
+            if (! $cryptoStrong) {
                 $rnd = false;
             }
         }
@@ -58,7 +58,7 @@ class GoogleAuthenticator
      * Calculate the code, with given secret and point in time.
      *
      * @param string $secret
-     * @param int|null $timeSlice
+     * @param null|int $timeSlice
      *
      * @return string
      */
@@ -100,11 +100,11 @@ class GoogleAuthenticator
      *
      * @return string
      */
-    public function getQRCodeGoogleUrl($name, $secret, $title = null, $params = array())
+    public function getQRCodeGoogleUrl($name, $secret, $title = null, $params = [])
     {
-        $width = !empty($params['width']) && (int)$params['width'] > 0 ? (int)$params['width'] : 200;
-        $height = !empty($params['height']) && (int)$params['height'] > 0 ? (int)$params['height'] : 200;
-        $level = !empty($params['level']) && array_search($params['level'], array('L', 'M', 'Q', 'H')) !== false ? $params['level'] : 'M';
+        $width = ! empty($params['width']) && (int) $params['width'] > 0 ? (int) $params['width'] : 200;
+        $height = ! empty($params['height']) && (int) $params['height'] > 0 ? (int) $params['height'] : 200;
+        $level = ! empty($params['level']) && array_search($params['level'], ['L', 'M', 'Q', 'H']) !== false ? $params['level'] : 'M';
 
         $urlencoded = urlencode('otpauth://totp/' . $name . '?secret=' . $secret . '');
         if (isset($title)) {
@@ -120,7 +120,7 @@ class GoogleAuthenticator
      * @param string $secret
      * @param string $code
      * @param int $discrepancy This is the allowed time drift in 30 second units (8 means 4 minutes before or after)
-     * @param int|null $currentTimeSlice time slice if we want use other that time()
+     * @param null|int $currentTimeSlice time slice if we want use other that time()
      *
      * @return bool
      */
@@ -175,13 +175,13 @@ class GoogleAuthenticator
         $base32charsFlipped = array_flip($base32chars);
 
         $paddingCharCount = substr_count($secret, $base32chars[32]);
-        $allowedValues = array(6, 4, 3, 1, 0);
-        if (!in_array($paddingCharCount, $allowedValues)) {
+        $allowedValues = [6, 4, 3, 1, 0];
+        if (! in_array($paddingCharCount, $allowedValues)) {
             return false;
         }
         for ($i = 0; $i < 4; ++$i) {
-            if ($paddingCharCount == $allowedValues[$i] &&
-                substr($secret, -($allowedValues[$i])) != str_repeat($base32chars[32], $allowedValues[$i])) {
+            if ($paddingCharCount == $allowedValues[$i]
+                && substr($secret, -($allowedValues[$i])) != str_repeat($base32chars[32], $allowedValues[$i])) {
                 return false;
             }
         }
@@ -190,7 +190,7 @@ class GoogleAuthenticator
         $binaryString = '';
         for ($i = 0; $i < count($secret); $i = $i + 8) {
             $x = '';
-            if (!in_array($secret[$i], $base32chars)) {
+            if (! in_array($secret[$i], $base32chars)) {
                 return false;
             }
             for ($j = 0; $j < 8; ++$j) {
@@ -212,13 +212,13 @@ class GoogleAuthenticator
      */
     protected function _getBase32LookupTable()
     {
-        return array(
+        return [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //  7
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 15
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 23
             'Y', 'Z', '2', '3', '4', '5', '6', '7', // 31
             '=',  // padding char
-        );
+        ];
     }
 
     /**

@@ -1,7 +1,14 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Controller\Api\Demo;
 
 use App\Controller\AbstractController;
@@ -23,9 +30,10 @@ class ElasticsearchController extends AbstractController
 {
     /**
      * @var ClientBuilderFactory
-     * @Inject()
+     * @Inject
      */
     protected $esBuilder;
+
     /**
      * @var \Elasticsearch\ClientBuilder
      */
@@ -34,12 +42,11 @@ class ElasticsearchController extends AbstractController
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->esClient =  $this->esBuilder->create()->setHosts(['http://127.0.0.1:9200'])->build();
+        $this->esClient = $this->esBuilder->create()->setHosts(['http://127.0.0.1:9200'])->build();
     }
 
     /**
      * 状态
-     * @return array
      */
     public function info(): array
     {
@@ -47,11 +54,10 @@ class ElasticsearchController extends AbstractController
     }
 
     /**
-     * 创建索引
+     * 创建索引.
      */
     public function create()
     {
-
         $oriData = '[{ "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
                     { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
                     { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
@@ -102,23 +108,20 @@ class ElasticsearchController extends AbstractController
                     { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }]';
         $oriData = json_decode($oriData, true);
 
-
         foreach ($oriData as $key => $value) {
             $params = [
                 'index' => 'demo',
                 'type' => 'demo_address',
                 'id' => $key,
-                'body' => $value
+                'body' => $value,
             ];
 
             $res = $this->esClient->create($params);
         }
-
     }
 
     public function suggestions()
     {
-
 //        //单个字段查询
 //        $params = [
 //            'index' => 'video',
@@ -137,9 +140,9 @@ class ElasticsearchController extends AbstractController
 //            ]
 //        ];
 
-        $keyWord = $this->request->input('keyword','金沙');
+        $keyWord = $this->request->input('keyword', '金沙');
 
-        if (!$keyWord) {
+        if (! $keyWord) {
             return response_error('请输入关键词');
         }
         //多个字段查询
@@ -153,30 +156,28 @@ class ElasticsearchController extends AbstractController
             ['match' => ['address' => $keyWord]],
         ];
         //匹配度
-        $params['body']['query']['bool']['minimum_should_match'] = "80%";
+        $params['body']['query']['bool']['minimum_should_match'] = '80%';
 
         //高亮显示
         $params['body']['highlight']['fields'] = [
             'value' => [
-                'pre_tags' => "<em>",
-                'post_tags' => "</em>",
+                'pre_tags' => '<em>',
+                'post_tags' => '</em>',
             ],
             'address' => [
-                'pre_tags' => "<em>",
-                'post_tags' => "</em>",
-            ]
+                'pre_tags' => '<em>',
+                'post_tags' => '</em>',
+            ],
         ];
 
         //按打分结果排序
         $params['body']['sort'] = [
-            ['_score' => ['order' => 'desc']]
+            ['_score' => ['order' => 'desc']],
         ];
 
         $data = $this->esClient->search($params);
 
-
         $data = $data['hits']['hits'];
-
 
         $returnData = [];
         if ($data) {
@@ -186,12 +187,10 @@ class ElasticsearchController extends AbstractController
         }
 
         return response_success('success', $returnData);
-
     }
 
-
     /**
-     * 删除索引
+     * 删除索引.
      */
     public function delete()
     {
@@ -199,8 +198,6 @@ class ElasticsearchController extends AbstractController
             'index' => 'demo',
         ];
 
-        $res = $this->esClient->indices()->delete($params);
-
-        return $res;
+        return $this->esClient->indices()->delete($params);
     }
 }

@@ -1,7 +1,14 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Controller\Api\Demo;
 
 use App\Controller\AbstractController;
@@ -11,14 +18,13 @@ use Hyperf\WebSocketServer\Sender;
 use Psr\Container\ContainerInterface;
 
 /**
- * 抽奖demo
+ * 抽奖demo.
  * @AutoController(prefix="api/demo/lottery")
  */
 class LotteryController extends AbstractController
 {
-
     /**
-     * @Inject()
+     * @Inject
      * @var Sender
      */
     protected $sender;
@@ -26,12 +32,10 @@ class LotteryController extends AbstractController
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-
     }
 
     /**
      * 状态
-     * @return object
      * @todo 奖品数量验证，奖品记录
      */
     public function index(): object
@@ -58,15 +62,29 @@ class LotteryController extends AbstractController
         //统计奖品中奖次数
         $this->redisClient->hIncrBy('prize', "{$prizeArr['prize']}", 1);
 
-        $msg = "谢谢参与";
+        $msg = '谢谢参与';
         if ($prizeArr['prize'] != '谢谢参与') {
-            $msg = "恭喜你，抽中:" . $prizeArr['prize'];
+            $msg = '恭喜你，抽中:' . $prizeArr['prize'];
         }
 
         //发送广播消息
         $this->sendAll($msg);
 
         return response_success($msg, $prizeArr);
+    }
+
+    /**
+     * 手动关闭连接.
+     * @return string
+     */
+    public function close(int $fd)
+    {
+        go(function () use ($fd) {
+            sleep(1);
+            $this->sender->disconnect($fd);
+        });
+
+        return '';
     }
 
     protected static function getRand(array $proArr): int
@@ -80,32 +98,15 @@ class LotteryController extends AbstractController
             if ($randNum <= $proCur) {
                 $result = $key;
                 break;
-            } else {
-                $proSum -= $proCur;
             }
+            $proSum -= $proCur;
         }
-        unset ($proArr);
+        unset($proArr);
         return intval($result);
     }
 
-
     /**
-     * 手动关闭连接
-     * @param int $fd
-     * @return string
-     */
-    public function close(int $fd)
-    {
-        go(function () use ($fd) {
-            sleep(1);
-            $this->sender->disconnect($fd);
-        });
-
-        return '';
-    }
-
-    /**
-     * 手动发送消息
+     * 手动发送消息.
      * @param $content
      */
     protected function sendAll($content)
@@ -116,6 +117,5 @@ class LotteryController extends AbstractController
         foreach ($fds as $fd) {
             $this->sender->push(intval($fd), $content);
         }
-
     }
 }

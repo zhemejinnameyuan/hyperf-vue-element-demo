@@ -5,12 +5,12 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-use Hyperf\Server\Server;
 use Hyperf\Server\Event;
+use Hyperf\Server\Server;
 
 return [
     'mode' => SWOOLE_PROCESS,
@@ -24,7 +24,6 @@ return [
             'callbacks' => [
                 Event::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
             ],
-
         ],
         [
             'name' => 'ws',
@@ -50,10 +49,10 @@ return [
         'socket_buffer_size' => 2 * 1024 * 1024,
         'buffer_output_size' => 2 * 1024 * 1024,
 
-//        //静态资源设置
+        //        //静态资源设置
         'document_root' => BASE_PATH . '/public',
         'enable_static_handler' => true,
-        'task_worker_num'=> 2,
+        'task_worker_num' => 2,
         'task_enable_coroutine' => false,
     ],
     'callbacks' => [

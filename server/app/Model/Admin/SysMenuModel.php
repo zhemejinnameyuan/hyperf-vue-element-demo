@@ -1,22 +1,27 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Model\Admin;
-
 
 use App\Model\Model;
 use Hyperf\DbConnection\Db;
 
 /**
  * 菜单
- * Class SysMenuModel
- * @package App\Model\Boss
+ * Class SysMenuModel.
  */
 class SysMenuModel extends Model
 {
-
     /**
-     * 表名
+     * 表名.
      */
     protected $table = 'sys_menu';
 
@@ -26,6 +31,7 @@ class SysMenuModel extends Model
      * @var array
      */
     protected $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -34,14 +40,10 @@ class SysMenuModel extends Model
     protected $casts = [];
 
     /**
-     * 获取菜单
-     * @param int $userId
-     * @return array
+     * 获取菜单.
      */
     public static function getMenuTree(int $userId): array
     {
-
-
         if ($userId > 0) {
             $sql = <<<SQL
 SELECT
@@ -59,17 +61,11 @@ SQL;
             $dataList = parent::query()->where('status', 1)->get()->toArray();
         }
 
-        $tree = self::handelMenuList($dataList, 0);
-
-        return $tree;
+        return self::handelMenuList($dataList, 0);
     }
 
     /**
-     * 获取数据
-     * @param array $where
-     * @param int $page
-     * @param int $limit
-     * @return array
+     * 获取数据.
      */
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
@@ -82,18 +78,14 @@ SQL;
             }
         });
 
-
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->orderBy('id', 'asc')->get()
+            'data' => $query->forPage($page, $limit)->orderBy('id', 'asc')->get(),
         ];
     }
 
     /**
-     * 处理菜单层级
-     * @param array $menuList
-     * @param int $pid
-     * @return array
+     * 处理菜单层级.
      */
     protected static function handelMenuList(array $menuList, int $pid): array
     {

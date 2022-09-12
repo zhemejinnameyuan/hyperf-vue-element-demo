@@ -1,15 +1,21 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Job;
-
 
 use Hyperf\AsyncQueue\Job;
 
 /**
  * 传统模式的队列
- * Class SmsJob
- * @package App\Job
+ * Class SmsJob.
  */
 class SmsJob extends Job
 {
@@ -22,7 +28,7 @@ class SmsJob extends Job
     }
 
     /**
-     * 消费队列
+     * 消费队列.
      */
     public function handle()
     {

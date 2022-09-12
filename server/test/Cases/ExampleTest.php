@@ -5,11 +5,10 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace HyperfTest\Cases;
 
 use App\Model\Admin\SysUserModel;
@@ -37,7 +36,6 @@ class ExampleTest extends HttpTestCase
         ];
         $model = container()->get(SysUserModel::class)->getDataList($where, 1, 15);
         $this->assertEquals(1, $model['count']);
-
 
         $this->assertTrue(true);
 

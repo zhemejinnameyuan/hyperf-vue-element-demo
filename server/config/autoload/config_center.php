@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-use Hyperf\ConfigApollo\PullMode;
 use Hyperf\ConfigCenter\Mode;
 
 return [
@@ -17,7 +16,6 @@ return [
     'driver' => 'nacos',
     'mode' => env('CONFIG_CENTER_MODE', Mode::PROCESS),
     'drivers' => [
-
         'nacos' => [
             'driver' => Hyperf\ConfigNacos\NacosDriver::class,
             'merge_mode' => Hyperf\ConfigNacos\Constants::CONFIG_MERGE_OVERWRITE,
@@ -48,7 +46,5 @@ return [
                 ],
             ],
         ],
-
-
     ],
 ];

@@ -1,24 +1,29 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Model\Admin;
-
 
 use App\Model\Model;
 use Hyperf\Scout\Searchable;
 
 /**
  * 操作日志
- * Class SysUserModel
- * @package App\Model\Boss
+ * Class SysUserModel.
  */
 class OpLogModel extends Model
 {
-
     use Searchable;
 
     /**
-     * 表名
+     * 表名.
      */
     protected $table = 'op_log';
 
@@ -28,6 +33,7 @@ class OpLogModel extends Model
      * @var array
      */
     protected $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -35,18 +41,13 @@ class OpLogModel extends Model
      */
     protected $casts = [];
 
-
     public function searchableAs()
     {
         return 'posts_index';
     }
 
     /**
-     * 获取用户数据
-     * @param array $where
-     * @param int $page
-     * @param int $limit
-     * @return array
+     * 获取用户数据.
      */
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
@@ -67,8 +68,7 @@ class OpLogModel extends Model
 
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->orderBy('id', 'desc')->get()
+            'data' => $query->forPage($page, $limit)->orderBy('id', 'desc')->get(),
         ];
     }
-
 }
