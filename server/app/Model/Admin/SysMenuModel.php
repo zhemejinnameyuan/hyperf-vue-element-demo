@@ -50,10 +50,11 @@ SELECT
 	sys_menu.* 
 FROM
 	sys_menu
-	INNER JOIN sys_user_group ON FIND_IN_SET( sys_menu.id, sys_user_group.rule_ids )
+	INNER JOIN sys_user_group ON FIND_IN_SET( sys_menu.id, sys_user_group.menu_ids )
 	INNER JOIN sys_user ON sys_user.group_id = sys_user_group.id 
 WHERE
 	sys_user.id = {$userId} AND sys_menu.status = 1
+ORDER BY sort asc 	
 SQL;
 
             $dataList = Db::select($sql);
@@ -80,7 +81,7 @@ SQL;
 
         return [
             'count' => $query->count(),
-            'data' => $query->forPage($page, $limit)->orderBy('id', 'asc')->get(),
+            'data' => $query->forPage($page, $limit)->orderBy('sort', 'asc')->get(),
         ];
     }
 

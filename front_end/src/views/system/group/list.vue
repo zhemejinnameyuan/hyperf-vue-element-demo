@@ -44,7 +44,7 @@
                     <el-input v-model="dataInfo.name" placeholder="名称" aria-required="true"/>
                 </el-form-item>
 
-                <el-form-item label="Menus" prop="rule_ids">
+                <el-form-item label="菜单" prop="menu_ids">
                     <el-tree
 
                             ref="tree"
@@ -57,6 +57,8 @@
                             class="permission-tree"
                     />
                 </el-form-item>
+
+                <el-transfer v-model="transferValue" :data="transferData"></el-transfer>
 
                 <el-form-item label="状态" prop="status">
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
@@ -144,6 +146,12 @@
                         label: 'name'
                     }
                 },
+                transferData: [
+                    { key: 1,
+                        label: `备选项 1`,
+                    }
+                ],
+                transferValue: [1, 4]
 
             }
         },
@@ -184,7 +192,7 @@
                 this.treeConf.checkStrictly = true;
                 this.$nextTick(() => {
                     this.$refs.tree.setCheckedKeys([]);
-                    this.treeConf.checkedNode = this.dataInfo.rule_ids.split(',')
+                    this.treeConf.checkedNode = this.dataInfo.menu_ids.split(',')
 
                     this.treeConf.checkStrictly = false;
                 })
@@ -197,10 +205,7 @@
                     type: 'warning'
                 }).then(async () => {
                     var response = await userGroupDelete(row.id)
-                    this.$message({
-                        type: 'success',
-                        message: response.msg
-                    })
+                    this.$message.success(response.message)
                     this.getDataList()
                 }).catch(err => {
                     console.error(err)
@@ -209,19 +214,14 @@
             //提交
             confirmRole(formName) {
                 //子节点 和 父节点
-                const tree_rule_ids = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
-                this.dataInfo.rule_ids = tree_rule_ids.join(',');
+                const tree_menu_ids = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                this.dataInfo.menu_ids = tree_menu_ids.join(',');
 
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         userGroupSave(this.dataInfo).then(response => {
                             this.dialogVisible = false
-                            this.$notify({
-                                title: 'Success',
-                                dangerouslyUseHTMLString: true,
-                                message: response.msg,
-                                type: 'success'
-                            })
+                            this.$message.success(response.message)
                             this.getDataList()
                         }).catch(error => {
 

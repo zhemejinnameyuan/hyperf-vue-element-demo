@@ -50,15 +50,9 @@
             doSign(){
                 doSign().then(response=>{
                     if (response.code == 0) {
-                        this.$message({
-                            'type': 'success',
-                            'message': response.msg
-                        })
+                        this.$message.success(response.message)
                     } else {
-                        this.$message({
-                            'type': 'error',
-                            'message': response.msg
-                        })
+                        this.$message.error(response.message)
                     }
 
                     //渲染

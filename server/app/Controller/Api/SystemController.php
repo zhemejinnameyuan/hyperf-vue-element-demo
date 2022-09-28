@@ -70,7 +70,7 @@ class SystemController extends AbstractController
             ]
         );
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort']);
 
         if ($saveData['id']) {
             //更新
@@ -82,7 +82,7 @@ class SystemController extends AbstractController
 
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 菜单:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
         return response_error('操作失败');
     }
@@ -106,9 +106,9 @@ class SystemController extends AbstractController
         $result = SysMenuModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, $id, '删除菜单');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /** ================== 配置管理 ================== */
@@ -162,9 +162,9 @@ class SystemController extends AbstractController
             //重置配置
             parent::initConfig();
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 配置:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -180,8 +180,8 @@ class SystemController extends AbstractController
         $result = SysConfigModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, $id, '删除配置');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 }

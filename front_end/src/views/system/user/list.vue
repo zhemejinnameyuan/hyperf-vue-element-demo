@@ -196,10 +196,7 @@
                     type: 'warning'
                 }).then(async () => {
                     var response = await userDelete(row.id)
-                    this.$message({
-                        type: 'success',
-                        message: response.msg
-                    })
+                    this.$message.success(response.message)
                     this.getDataList()
                 }).catch(err => {
                     console.error(err)
@@ -211,12 +208,7 @@
                     if (valid) {
                         userSave(this.dataInfo).then(response => {
                             this.dialogVisible = false
-                            this.$notify({
-                                title: 'Success',
-                                dangerouslyUseHTMLString: true,
-                                message: response.msg,
-                                type: 'success'
-                            })
+                            this.$message.success(response.message)
                             this.getDataList()
                         }).catch(error => {
 

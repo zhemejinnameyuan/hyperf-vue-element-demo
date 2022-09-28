@@ -81,9 +81,9 @@ class HotArticleController extends AbstractController
         $result = SiteTypeModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $id, '删除分类');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -116,9 +116,9 @@ class HotArticleController extends AbstractController
 
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 分类:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -166,9 +166,9 @@ class HotArticleController extends AbstractController
         $result = SiteConfigModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $id, '删除分类');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -207,9 +207,9 @@ class HotArticleController extends AbstractController
 
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 网站:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**

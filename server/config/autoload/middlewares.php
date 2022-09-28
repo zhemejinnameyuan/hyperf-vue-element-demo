@@ -15,6 +15,7 @@ return [
         \Hyperf\Tracer\Middleware\TraceMiddleware::class, //调用链追踪
         Hyperf\Validation\Middleware\ValidationMiddleware::class, //验证器
         \App\Middleware\CorsMiddleware::class, //跨域
-        //        Phper666\JWTAuth\Middleware\JWTAuthMiddleware::class
+        //        Phper666\JWTAuth\Middleware\JWTAuthMiddleware::class,//jwt
+        //        \App\Middleware\CasbinMiddleware::class,//权限
     ],
 ];

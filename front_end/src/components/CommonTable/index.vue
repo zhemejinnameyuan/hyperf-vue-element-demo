@@ -49,7 +49,9 @@
             :page-sizes="[10, 20, 30,50,100]"
             :page-size="pages.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalCount">
+            :total="totalCount"
+            :hide-on-single-page="true"
+    >
     </el-pagination>
 
   </div>

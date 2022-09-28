@@ -10,6 +10,7 @@
                         placeholder="请输入内容"
                         :trigger-on-focus="false"
                         @select="handleSelect"
+                        style="width: 800px;"
 
                 ></el-autocomplete>
             </el-col>

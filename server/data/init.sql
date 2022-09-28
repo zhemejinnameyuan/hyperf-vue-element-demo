@@ -80,16 +80,16 @@ INSERT INTO `hyperf_admin`.`sys_user`(`id`, `username`, `password`, `nickname`, 
 CREATE TABLE `sys_user_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '名称',
-  `rule_ids` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '权限节点',
+  `menu_ids` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '菜单节点',
   `status` tinyint(4) DEFAULT '1' COMMENT '状态,1-启用,0-禁用',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='菜单表';
 
-INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `rule_ids`, `status`, `created_at`, `updated_at`) VALUES (1, '管理员', '1,5,2,3,4,6', 1, '2020-10-30 10:18:36', '2020-11-10 11:44:33');
-INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `rule_ids`, `status`, `created_at`, `updated_at`) VALUES (2, '测试', '1,5,2,3,6', 1, '2020-10-30 10:18:50', '2020-11-09 22:21:27');
-INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `rule_ids`, `status`, `created_at`, `updated_at`) VALUES (3, '产品', '1,5,3', 1, '2020-10-30 10:19:14', '2020-11-09 22:21:34');
+INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `menu_ids`, `status`, `created_at`, `updated_at`) VALUES (1, '管理员', '1,5,2,3,4,6', 1, '2020-10-30 10:18:36', '2020-11-10 11:44:33');
+INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `menu_ids`, `status`, `created_at`, `updated_at`) VALUES (2, '测试', '1,5,2,3,6', 1, '2020-10-30 10:18:50', '2020-11-09 22:21:27');
+INSERT INTO `hyperf_admin`.`sys_user_group`(`id`, `name`, `menu_ids`, `status`, `created_at`, `updated_at`) VALUES (3, '产品', '1,5,3', 1, '2020-10-30 10:19:14', '2020-11-09 22:21:34');
 
 CREATE TABLE `site_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

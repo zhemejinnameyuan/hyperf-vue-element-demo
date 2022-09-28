@@ -105,9 +105,9 @@ class UserController extends AbstractController
         $result = SysUserModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $id, '删除用户');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -158,9 +158,9 @@ class UserController extends AbstractController
 
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 用户:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /** ================== 权限分组管理 ================== */
@@ -189,9 +189,9 @@ class UserController extends AbstractController
         $result = SysUserGroupModel::query()->where('id', $id)->delete();
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $id, '删除 权限分组');
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
@@ -208,7 +208,7 @@ class UserController extends AbstractController
             ]
         );
 
-        $saveData = $this->request->inputs(['id', 'name', 'status', 'rule_ids']);
+        $saveData = $this->request->inputs(['id', 'name', 'status', 'menu_ids']);
 
         if ($saveData['id']) {
             //更新
@@ -225,9 +225,9 @@ class UserController extends AbstractController
 
         if ($result !== false) {
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 权限分组:' . json_encode($saveData));
-            return response_success('操作成功');
+            return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**

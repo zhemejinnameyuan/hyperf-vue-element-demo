@@ -36,6 +36,7 @@
         </CommonTable>
 
         <!--模态框-->
+        <!--模态框-->
         <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑菜单':'新增菜单'">
             <el-form :model="dataInfo" :rules="rules" ref="ruleForm" label-width="120px" label-position="left">
                 <el-form-item label="id" prop="id">
@@ -56,9 +57,7 @@
                 <el-form-item label="组件(视图路径)" prop="component">
                     <el-input v-model="dataInfo.component" placeholder="如:form/index" aria-required="true"/>
                 </el-form-item>
-                <el-form-item label="序号" prop="sort">
-                    <el-input v-model="dataInfo.sort" placeholder="sort"/>
-                </el-form-item>
+
                 <el-form-item label="状态" prop="status">
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
                     <el-radio v-model="dataInfo.status" :label="1">启用</el-radio>
@@ -103,16 +102,15 @@
                         },
                         {prop: 'path', label: '路由路径', width: "150"},
                         {prop: 'redirect', label: '重定向', width: "150"},
-                        {prop: 'component', label: '组件(视图路径)', width: "250"},
-                        {prop: 'status', label: '状态', width: "100", formatter: (row) => {
+                        {prop: 'component', label: '组件(视图路径)', width: "250"}, {
+                            prop: 'status', label: '状态', width: "100", formatter: (row) => {
                                 if (row.status == 1) {
                                     return "<el-tag class='el-tag el-tag--success el-tag--light' >启用</el-tag>";
                                 } else {
                                     return '<el-tag class="el-tag el-tag--danger el-tag--light" >禁用</el-tag>';
                                 }
                             }
-                        },
-                        {prop: 'sort', label: '序号', width: "150"}
+                        }
                     ],
                     operatesBtn: [
                         {

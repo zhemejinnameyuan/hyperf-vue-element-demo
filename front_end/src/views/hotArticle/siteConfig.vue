@@ -232,10 +232,7 @@
                     type: 'warning'
                 }).then(async () => {
                     var response = await siteConfigDelete(row.id)
-                    this.$message({
-                        type: 'success',
-                        message: response.msg
-                    })
+                    this.$message.success(response.message)
                     this.getDataList()
                 }).catch(err => {
                     console.error(err)
@@ -247,12 +244,7 @@
                     if (valid) {
                         siteConfigSave(this.dataInfo).then(response => {
                             this.dialogVisible = false
-                            this.$notify({
-                                title: 'Success',
-                                dangerouslyUseHTMLString: true,
-                                message: response.msg,
-                                type: 'success'
-                            })
+                            this.$message.success(response.message)
                             this.getDataList()
                         }).catch(error => {
 
