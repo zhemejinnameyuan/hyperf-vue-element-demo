@@ -110,8 +110,8 @@
             //获取数据
             async getDataList() {
                 //拼装分页和查询参数
-                var params = mergeJson(this.commonTable.pages, this.searchData)
-                var response = await getOpLogDataList(params)
+                let params = mergeJson(this.commonTable.pages, this.searchData)
+                let response = await getOpLogDataList(params)
 
 
                 this.commonTable.dataList = response.data.data

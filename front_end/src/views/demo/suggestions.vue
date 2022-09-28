@@ -40,10 +40,10 @@
         },
         methods: {
             querySearch(queryString, cb) {
-                var params = {"keyword": queryString};
+                let params = {"keyword": queryString};
 
                 getInputSuggestions(params).then(response => {
-                    var results = response.data;
+                    let results = response.data;
                     cb(results);
                 })
             },

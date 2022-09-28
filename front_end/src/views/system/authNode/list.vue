@@ -76,7 +76,7 @@
 </template>
 <script>
     import CommonTable from '../../../components/CommonTable'
-    import {mergeJson} from "../../../utils";
+    import {confirmRequest, mergeJson} from "../../../utils";
     import {getMenuDataList, menuDelete, menuSave} from "../../../api/system/menu";
 
     export default {
@@ -187,16 +187,10 @@
             },
             //删除
             handleDelete(row) {
-                this.$confirm('确定要删除此数据吗？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    var response = await menuDelete(row.id)
+                confirmRequest('确定要删除此数据吗?',async ()=>{
+                    let response = await menuDelete(row.id)
                     this.$message.success(response.message)
                     this.getDataList()
-                }).catch(err => {
-                    console.error(err)
                 })
             },
             //提交
@@ -223,8 +217,8 @@
             //获取数据
             async getDataList() {
                 //拼装分页和查询参数
-                var params = mergeJson(this.commonTable.pages, this.searchData)
-                var response = await getMenuDataList(params)
+                let params = mergeJson(this.commonTable.pages, this.searchData)
+                let response = await getMenuDataList(params)
 
 
                 this.commonTable.dataList = response.data.data

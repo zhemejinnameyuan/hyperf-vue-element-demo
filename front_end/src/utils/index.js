@@ -1,143 +1,4 @@
-/**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
- * Parse the time to string
- * @param {(Object|string|number)} time
- * @param {string} cFormat
- * @returns {string | null}
- */
-export function parseTime(time, cFormat) {
-  if (arguments.length === 0 || !time) {
-    return null
-  }
-  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
-  let date
-  if (typeof time === 'object') {
-    date = time
-  } else {
-    if ((typeof time === 'string')) {
-      if ((/^[0-9]+$/.test(time))) {
-        // support "1548221490638"
-        time = parseInt(time)
-      } else {
-        // support safari
-        // https://stackoverflow.com/questions/4310953/invalid-date-in-safari
-        time = time.replace(new RegExp(/-/gm), '/')
-      }
-    }
-
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
-      time = time * 1000
-    }
-    date = new Date(time)
-  }
-  const formatObj = {
-    y: date.getFullYear(),
-    m: date.getMonth() + 1,
-    d: date.getDate(),
-    h: date.getHours(),
-    i: date.getMinutes(),
-    s: date.getSeconds(),
-    a: date.getDay()
-  }
-  const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
-    const value = formatObj[key]
-    // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
-    return value.toString().padStart(2, '0')
-  })
-  return time_str
-}
-
-/**
- * @param {number} time
- * @param {string} option
- * @returns {string}
- */
-export function formatTime(time, option) {
-  if (('' + time).length === 10) {
-    time = parseInt(time) * 1000
-  } else {
-    time = +time
-  }
-  const d = new Date(time)
-  const now = Date.now()
-
-  const diff = (now - d) / 1000
-
-  if (diff < 30) {
-    return '刚刚'
-  } else if (diff < 3600) {
-    // less 1 hour
-    return Math.ceil(diff / 60) + '分钟前'
-  } else if (diff < 3600 * 24) {
-    return Math.ceil(diff / 3600) + '小时前'
-  } else if (diff < 3600 * 24 * 2) {
-    return '1天前'
-  }
-  if (option) {
-    return parseTime(time, option)
-  } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
-  }
-}
-
-/**
- * @param {string} url
- * @returns {Object}
- */
-export function param2Obj(url) {
-  const search = decodeURIComponent(url.split('?')[1]).replace(/\+/g, ' ')
-  if (!search) {
-    return {}
-  }
-  const obj = {}
-  const searchArr = search.split('&')
-  searchArr.forEach(v => {
-    const index = v.indexOf('=')
-    if (index !== -1) {
-      const name = v.substring(0, index)
-      const val = v.substring(index + 1, v.length)
-      obj[name] = val
-    }
-  })
-  return obj
-}
-
-
-/**
- * This is just a simple version of deep copy
- * Has a lot of edge cases bug
- * If you want to use a perfect deep copy, use lodash's _.cloneDeep
- * @param {Object} source
- * @returns {Object}
- */
-export function deepClone(source) {
-  if (!source && typeof source !== 'object') {
-    throw new Error('error arguments', 'deepClone')
-  }
-  const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
-    if (source[keys] && typeof source[keys] === 'object') {
-      targetObj[keys] = deepClone(source[keys])
-    } else {
-      targetObj[keys] = source[keys]
-    }
-  })
-  return targetObj
-}
+import {MessageBox} from 'element-ui'
 
 /**
  * 合并json
@@ -145,12 +6,35 @@ export function deepClone(source) {
  * @param json2
  * @returns {any}
  */
-export function  mergeJson(json1,json2){
-  var length1 = 0, length2 = 0, jsonStr, str;
-  for (var ever in json1) length1++;
-  for (var ever in json2) length2++;
-  if (length1 && length2) str = ',';
-  else str = '';
-  jsonStr = ((JSON.stringify(json1)).replace(/,}/, '}') + (JSON.stringify(json2)).replace(/,}/, '}')).replace(/}{/, str);
-  return JSON.parse(jsonStr);
+export function mergeJson(json1, json2) {
+    let length1 = 0, length2 = 0, jsonStr, str;
+    for (let ever in json1) {
+        length1++;
+    }
+    for (let ever in json2) {
+        length2++;
+    }
+    if (length1 && length2) {
+        str = ',';
+    } else {
+        str = '';
+    }
+
+    jsonStr = ((JSON.stringify(json1)).replace(/,}/, '}') + (JSON.stringify(json2)).replace(/,}/, '}')).replace(/}{/, str);
+    return JSON.parse(jsonStr);
+}
+
+/**
+ * 封装 confirm 确认框
+ * @param title
+ * @param callbackFunction
+ */
+export function confirmRequest(title = '确定要操作吗?', callbackFunction) {
+    MessageBox.confirm(title, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(callbackFunction).catch(err => {
+        console.info(err)
+    })
 }

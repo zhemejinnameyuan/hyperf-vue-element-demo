@@ -108,7 +108,7 @@
 </template>
 <script>
     import CommonTable from '../../components/CommonTable'
-    import {mergeJson} from "../../utils";
+    import {confirmRequest, mergeJson} from "../../utils";
     import {getSiteConfigDataList, getSiteTypeOptionDataList, runSite, siteConfigDelete, siteConfigSave} from "../../api/hotArticle/site";
 
     export default {
@@ -226,17 +226,14 @@
             },
             //删除
             handleDelete(row) {
-                this.$confirm('确定要删除此数据吗？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    var response = await siteConfigDelete(row.id)
-                    this.$message.success(response.message)
-                    this.getDataList()
-                }).catch(err => {
-                    console.error(err)
-                })
+                confirmRequest(
+                    '确定要删除此数据吗?',
+                    async () => {
+                        let response = await siteConfigDelete(row.id)
+                        this.$message.success(response.message)
+                        this.getDataList()
+                    }
+                )
             },
             //提交
             confirmRole(formName) {
@@ -262,9 +259,8 @@
             //获取数据
             async getDataList() {
                 //拼装分页和查询参数
-                var params = mergeJson(this.commonTable.pages, this.searchData)
-                var response = await getSiteConfigDataList(params)
-
+                let params = mergeJson(this.commonTable.pages, this.searchData);
+                let response = await getSiteConfigDataList(params)
 
                 this.commonTable.dataList = response.data.data
                 this.commonTable.totalCount = response.data.count
@@ -284,13 +280,15 @@
             handleCommand(command, row) {
                 switch (command) {
                     case 'edit':
-                        this.handleEdit(row)
+                        this.handleEdit(row);
                         break;
                     case 'delete':
-                        this.handleDelete(row)
+                        this.handleDelete(row);
                         break;
                     case 'runSite':
-                        this.handleRunSite(row)
+                        this.handleRunSite(row);
+                        break;
+                    default:
                         break;
                 }
             },
@@ -305,18 +303,17 @@
                 this.dataInfo = JSON.parse(JSON.stringify(row))
                 runSite(this.dataInfo.id).then(response => {
                     loading.close();
-                    this.runDialogVisible = true
-
+                    this.runDialogVisible = true;
                     let result = [];
 
-                    for (var i in response.data){
-                        result.push({"title":i,"url":response.data[i]})
+                    for (let i in response.data){
+                        result.push({"title":i,"url":response.data[i]});
                     }
-                    console.log(result)
-                    this.runResult = result
+                    console.log(result);
+                    this.runResult = result;
                 }).catch(error => {
                     loading.close();
-                    console.log(error)
+                    console.log(error);
                 })
 
             },

@@ -95,15 +95,15 @@
                 this.dialogType = 'edit'
                 this.dialogVisible = true
 
-                var response = await getFundCcmxList(row.code)
+                let response = await getFundCcmxList(row.code)
 
                 this.fundCcmxData = response.data.data
             },
             //获取数据
             async getDataList() {
                 //拼装分页和查询参数
-                var params = mergeJson(this.commonTable.pages, this.searchData)
-                var response = await getFundDataList(params)
+                let params = mergeJson(this.commonTable.pages, this.searchData)
+                let response = await getFundDataList(params)
 
 
                 this.commonTable.dataList = response.data.data
