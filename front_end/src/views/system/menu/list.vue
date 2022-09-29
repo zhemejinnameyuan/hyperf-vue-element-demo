@@ -148,7 +148,7 @@
                             icon: "el-icon-delete"
                         },
                         {
-                            label: '查看API PATH',
+                            label: 'API PATH',
                             type: 'info',
                             functionName: 'viewApiPath',
                             icon: "el-icon-view"

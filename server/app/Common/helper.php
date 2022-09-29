@@ -61,16 +61,6 @@ function response_error($msg = '操作失败', $data = [], $code = 1): object
 }
 
 /**
- * 加强版 md5.
- * @param $str '要加密的字符串'
- * @param string $key 加密key
- */
-function hyperf_md5($str, $key = 'hyperf'): string
-{
-    return $str === '' ? '' : md5(sha1($str) . $key);
-}
-
-/**
  * 获取客户端IP地址
  * @param int $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
  * @param bool $adv 是否进行高级模式获取（有可能被伪装）

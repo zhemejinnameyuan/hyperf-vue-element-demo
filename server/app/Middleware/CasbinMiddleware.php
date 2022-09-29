@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Middleware;
 
 use Donjan\Casbin\Enforcer;
@@ -29,17 +30,27 @@ class CasbinMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $userInfo = $this->jwt->getParserData();
-//        $userName =  $userInfo ? string($userInfo['user_name']) : 0;
         $server = $request->getServerParams();
         $path = strtolower($server['path_info']);
-        $method = strtoupper($server['request_method']);
-        $superAdmin = 1;
+        //白名单url
+        $whiteUrl = [
+            '/api/user/getmenulist',
+            '/api/user/info',
+            '/api/user/logout',
+            '/api/public/login',
+        ];
 
-        if ($userInfo['user_id'] === $superAdmin || (Enforcer::enforce($userInfo['username'], $path, $method))) {
+        if (in_array($path, $whiteUrl)) {
             return $handler->handle($request);
         }
 
-        return response_error('无权进行该操作');
+        $userInfo = $this->jwt->getParserData();
+
+        $superAdmin = env('SUPER_ADMIN_ID'); //超管ID，放行
+        if ($userInfo['user_id'] == $superAdmin || Enforcer::enforce($userInfo['username'], $path, 'all')) {
+            return $handler->handle($request);
+        }
+
+        return response_error('无权进行该操作:' . $path);
     }
 }

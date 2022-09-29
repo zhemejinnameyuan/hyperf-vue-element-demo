@@ -64,7 +64,7 @@ class SysUserModel extends Model
                     $query->where('sys_user.status', $where['status']);
                 }
             });
-        $columns = ['sys_user.*','sys_user_group.name as group_name'];
+        $columns = ['sys_user.*', 'sys_user_group.name as group_name'];
         return [
             'count' => $query->count(),
             'data' => $query->forPage($page, $limit)->orderBy('id', 'desc')->get($columns),
@@ -90,7 +90,7 @@ class SysUserModel extends Model
                 throw new Exception(UserCode::getMessage(UserCode::MAX_PASSWORD_ERROR), UserCode::MAX_PASSWORD_ERROR);
             }
 
-            if ($info['password'] !== $password) {
+            if (!password_verify($password, $info['password'])) {
                 //更新密码错误次数
                 self::updateUserInfo((int)$info['id'], ['password_error_count' => $info['password_error_count'] + 1]);
 

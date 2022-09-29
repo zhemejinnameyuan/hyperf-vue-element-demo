@@ -47,7 +47,7 @@ class PublicController extends AbstractController
             );
 
             $username = common_aes_decrypt($this->request->input('username'));
-            $password = hyperf_md5(common_aes_decrypt($this->request->input('password')), env('ADMIN_LOGIN_KEY'));
+            $password = common_aes_decrypt($this->request->input('password'));
 
             if (! $username) {
                 return response_error('账号数据错误');

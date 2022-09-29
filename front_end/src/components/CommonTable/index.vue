@@ -24,7 +24,7 @@
       </el-table-column>
 
       <!--按钮操作组-->
-      <el-table-column label="操作" v-if="operatesBtn.length > 0"  fixed="right" :min-width="operatesBtn.length*100">
+      <el-table-column label="操作" v-if="operatesBtn.length > 0"  fixed="right" :min-width="operatesBtn.length*110">
         <template slot-scope="scope">
           <el-button
                   v-for="(btn,key) in operatesBtn"

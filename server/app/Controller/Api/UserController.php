@@ -141,13 +141,12 @@ class UserController extends AbstractController
 
         $saveData = $this->request->inputs(['id', 'username', 'nickname', 'password', 'group_id', 'status', 'password_error_count']);
 
-        //密码加密
-        $password = hyperf_md5($saveData['password'], env('ADMIN_LOGIN_KEY'));
+
         if ($saveData['id']) {
             if ($saveData['password'] == '') {
                 unset($saveData['password']);
             } else {
-                $saveData['password'] = $password;
+                $saveData['password'] = password_hash($saveData['password'], PASSWORD_DEFAULT);
             }
 
             //更新
@@ -158,7 +157,7 @@ class UserController extends AbstractController
             if ($existUser) {
                 return response_error('用户名已被使用,请更换再试');
             }
-            $saveData['password'] = $password;
+            $saveData['password'] = password_hash($saveData['password'], PASSWORD_DEFAULT);
             $result = SysUserModel::insertData($saveData);
         }
 
