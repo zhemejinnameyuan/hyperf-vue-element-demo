@@ -122,6 +122,7 @@
                                 }
                             }
                         },
+                        {prop: 'group_name', label: '所属分组', width: "170"},
                         {prop: 'created_at', label: '创建时间', width: "170"},
                         {prop: 'updated_at', label: '更新时间', width: "170"}
                     ],

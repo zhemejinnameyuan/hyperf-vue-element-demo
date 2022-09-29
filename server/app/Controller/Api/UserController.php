@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller\Api;
 
 use App\Constants\OpBusinessType;
@@ -17,6 +18,7 @@ use App\Model\Admin\OpLogModel;
 use App\Model\Admin\SysMenuModel;
 use App\Model\Admin\SysUserGroupModel;
 use App\Model\Admin\SysUserModel;
+use Casbin\Enforcer;
 use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -91,10 +93,10 @@ class UserController extends AbstractController
     /**
      * 用户-删除.
      */
-    public function userDelete(): object
+    public function userDelete(Enforcer $enforcer): object
     {
         $id = $this->request->input('id');
-        if (! $id) {
+        if (!$id) {
             return response_error('缺少ID参数');
         }
 
@@ -102,9 +104,13 @@ class UserController extends AbstractController
             return response_error('不能对管理员进行删除操作');
         }
 
+        $userInfo = SysUserModel::query()->find($id);
         $result = SysUserModel::query()->where('id', $id)->delete();
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $id, '删除用户');
+            //删除用户所有权限
+            $enforcer->deleteRolesForUser((string)$userInfo['username']);
+
+            $this->addOpLog($this->opBusinessType, (int)$id, '删除用户');
             return response_success();
         }
         return response_error();
@@ -113,7 +119,7 @@ class UserController extends AbstractController
     /**
      * 用户-保存.
      */
-    public function userSave(): object
+    public function userSave(Enforcer $enforcer): object
     {
         $this->validationCheck(
             [
@@ -157,7 +163,12 @@ class UserController extends AbstractController
         }
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 用户:' . json_encode($saveData));
+            //删除用户所有权限
+            $enforcer->deleteRolesForUser((string)$saveData['username']);
+            //为用户添加权限组
+            $enforcer->addRoleForUser((string)$saveData['username'], (string)$saveData['group_id']);
+
+            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '添加/更新 用户:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -179,16 +190,24 @@ class UserController extends AbstractController
     /**
      * 权限分组-删除.
      */
-    public function userGroupDelete(): object
+    public function userGroupDelete(Enforcer $enforcer): object
     {
         $id = $this->request->input('id');
-        if (! $id) {
+        if (!$id) {
             return response_error('缺少ID参数');
+        }
+
+        $count = SysUserModel::where('group_id', '=', $id)->count();
+        if ($count > 0) {
+            return response_error("改分组下面还有使用中的用户，不能被删除");
         }
 
         $result = SysUserGroupModel::query()->where('id', $id)->delete();
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $id, '删除 权限分组');
+            //删除权限分组下所有用户
+            $enforcer->deleteRole((string)$id);
+
+            $this->addOpLog($this->opBusinessType, (int)$id, '删除 权限分组');
             return response_success();
         }
         return response_error();
@@ -197,7 +216,7 @@ class UserController extends AbstractController
     /**
      * 权限分组-保存.
      */
-    public function userGroupSave(): object
+    public function userGroupSave(Enforcer $enforcer): object
     {
         $this->validationCheck(
             [
@@ -221,10 +240,21 @@ class UserController extends AbstractController
             }
 
             $result = SysUserGroupModel::insertData($saveData);
+            $saveData['id'] = $result;
         }
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 权限分组:' . json_encode($saveData));
+
+            //删除原有的权限，再重新赋值新的权限
+            $enforcer->deletePermissionsForUser((string)$saveData['id']);
+
+            //获取菜单下所有api_path,再设置权限
+            $apiPath = SysMenuModel::getApiPath($saveData['menu_ids']);
+            foreach ($apiPath as $path) {
+                $enforcer->addPermissionForUser((string)$saveData['id'], $path, 'all');
+            }
+
+            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '添加/更新 权限分组:' . json_encode($saveData));
             return response_success();
         }
         return response_error();

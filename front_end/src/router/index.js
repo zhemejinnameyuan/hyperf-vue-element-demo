@@ -101,22 +101,25 @@ function handleMenuComponent(treeNodes) {
     var currentNode = treeNodes[i];
     var children = currentNode.children;
 
-    //处理component
-    try {
-      var tmp_component = currentNode['component'];
-      if (tmp_component == 'Layout') {
-        currentNode['component'] = Layout
-      } else {
-        currentNode['component'] = _import(`${tmp_component}`)
+    if(currentNode['show_menu'] == 1){
+      //处理component
+      try {
+        var tmp_component = currentNode['component'];
+        if (tmp_component == 'Layout') {
+          currentNode['component'] = Layout
+        } else {
+          currentNode['component'] = _import(`${tmp_component}`)
+        }
+      } catch (e) {
+        console.log(`import-component:${e}`)
       }
-    } catch (e) {
-      console.log(`import-component:${e}`)
+
+      newMenu = newMenu.concat(currentNode);
+      if (children && children.length > 0) {
+        handleMenuComponent(children);
+      }
     }
 
-    newMenu = newMenu.concat(currentNode);
-    if (children && children.length > 0) {
-      handleMenuComponent(children);
-    }
   }
   return newMenu;
 }

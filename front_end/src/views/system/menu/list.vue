@@ -59,6 +59,13 @@
                 <el-form-item label="序号" prop="sort">
                     <el-input v-model="dataInfo.sort" placeholder="sort"/>
                 </el-form-item>
+                <el-form-item label="API地址(换行)" prop="api_path">
+                    <el-input v-model="dataInfo.api_path" placeholder="api地址 多个换行" type="textarea"  :rows="6"/>
+                </el-form-item>
+                <el-form-item label="显示/隐藏菜单" prop="show_menu">
+                    <el-radio v-model="dataInfo.show_menu" :label="0">隐藏</el-radio>
+                    <el-radio v-model="dataInfo.show_menu" :label="1">显示</el-radio>
+                </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
                     <el-radio v-model="dataInfo.status" :label="1">启用</el-radio>
@@ -72,6 +79,11 @@
             </div>
         </el-dialog>
 
+
+        <!--模态框-->
+        <el-dialog title="查看API PATH " :visible.sync="viewApiPathDialogVisible" >
+           <span style="white-space: pre-wrap">{{apiPathContent}}</span>
+        </el-dialog>
 
     </div>
 </template>
@@ -112,6 +124,14 @@
                                 }
                             }
                         },
+                        {prop: 'show_menu', label: '显示/隐藏菜单', width: "120", formatter: (row) => {
+                                if (row.show_menu == 1) {
+                                    return "<el-tag class='el-tag el-tag--success el-tag--light' >显示</el-tag>";
+                                } else {
+                                    return '<el-tag class="el-tag el-tag--danger el-tag--light" >隐藏</el-tag>';
+                                }
+                            }
+                        },
                         {prop: 'sort', label: '序号', width: "150"}
                     ],
                     operatesBtn: [
@@ -127,6 +147,12 @@
                             functionName: 'delete',
                             icon: "el-icon-delete"
                         },
+                        {
+                            label: '查看API PATH',
+                            type: 'info',
+                            functionName: 'viewApiPath',
+                            icon: "el-icon-view"
+                        },
                     ]
                 },
                 searchData: {
@@ -134,6 +160,8 @@
                     'status': -1,
                 },
                 dialogVisible: false,
+                viewApiPathDialogVisible: false,
+                apiPathContent: '1',
                 dialogType: 'new',
                 dataInfo: [],
                 rules: {
@@ -178,7 +206,7 @@
                 this.dialogType = 'new'
                 this.dialogVisible = true
 
-                this.dataInfo = {"id": 0, "status": 1, 'pid': this.searchData.pid}
+                this.dataInfo = {"id": 0, "status": 1, 'show_menu': 1, 'sort': 0, 'pid': this.searchData.pid}
             },
             //编辑
             handleEdit(row) {
@@ -194,6 +222,12 @@
                     this.$message.success(response.message)
                     this.getDataList()
                 })
+            },
+            //查看path
+            viewApiPath(row) {
+               this.viewApiPathDialogVisible = true;
+               let info = JSON.parse(JSON.stringify(row));
+               this.apiPathContent = info.api_path;
             },
             //提交
             confirmRole(formName) {
@@ -245,6 +279,9 @@
                         break;
                     case 'delete':
                         this.handleDelete(row)
+                        break;
+                    case 'viewApiPath':
+                        this.viewApiPath(row)
                         break;
                 }
             }

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Model\Admin;
 
 use App\Model\Model;
@@ -59,7 +60,7 @@ SQL;
 
             $dataList = Db::select($sql);
         } else {
-            $dataList = parent::query()->where('status', 1)->get()->toArray();
+            $dataList = parent::query()->where('status', 1)->orderBy('sort')->get()->toArray();
         }
 
         return self::handelMenuList($dataList, 0);
@@ -107,5 +108,31 @@ SQL;
             }
         }
         return $tree;
+    }
+
+    /**
+     * 获取分组对应的api path
+     * @param $ids
+     * @return array
+     */
+    public static function getApiPath($ids)
+    {
+        $ids = is_string($ids) ? explode(',', $ids) : $ids;
+        $query = parent::query()->whereIn('id', $ids)->get();
+
+        $apiPath = [];
+        if ($query) {
+            foreach ($query as $item) {
+                $tmpApiPathArr = $item['api_path'] ? explode("\n", $item['api_path']) : [];
+                foreach ($tmpApiPathArr as $tmpUrl) {
+                    if ($tmpUrl) {
+                        $tmpUrl = strtolower($tmpUrl);
+                        $apiPath[$tmpUrl] = $tmpUrl;
+                    }
+                }
+            }
+        }
+
+        return $apiPath;
     }
 }

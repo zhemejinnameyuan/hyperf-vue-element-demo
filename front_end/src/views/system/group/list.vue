@@ -41,7 +41,7 @@
                     <el-input v-model="dataInfo.id" placeholder="id" disabled/>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dataInfo.name" placeholder="名称" aria-required="true"/>
+                    <el-input v-model="dataInfo.name" placeholder="名称" :disabled="dialogType==='edit'?true:false" aria-required="true"/>
                 </el-form-item>
 
                 <el-form-item label="菜单" prop="menu_ids">
@@ -58,7 +58,6 @@
                     />
                 </el-form-item>
 
-                <el-transfer v-model="transferValue" :data="transferData"></el-transfer>
 
                 <el-form-item label="状态" prop="status">
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
@@ -146,13 +145,6 @@
                         label: 'name'
                     }
                 },
-                transferData: [
-                    { key: 1,
-                        label: `备选项 1`,
-                    }
-                ],
-                transferValue: [1, 4]
-
             }
         },
         mounted() {

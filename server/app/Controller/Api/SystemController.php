@@ -15,6 +15,7 @@ use App\Constants\OpBusinessType;
 use App\Controller\AbstractController;
 use App\Model\Admin\SysConfigModel;
 use App\Model\Admin\SysMenuModel;
+use Casbin\Enforcer;
 use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -55,7 +56,7 @@ class SystemController extends AbstractController
     /**
      * 菜单-保存.
      */
-    public function menuSave(): object
+    public function menuSave(Enforcer $enforcer): object
     {
         $this->validationCheck(
             [
@@ -70,7 +71,7 @@ class SystemController extends AbstractController
             ]
         );
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort','api_path','show_menu']);
 
         if ($saveData['id']) {
             //更新
@@ -80,11 +81,12 @@ class SystemController extends AbstractController
             $result = SysMenuModel::insertData($saveData);
         }
 
-        if ($result !== false) {
+        if ($result !== false) { 
+
             $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 菜单:' . json_encode($saveData));
             return response_success();
         }
-        return response_error('操作失败');
+        return response_error();
     }
 
     /**
