@@ -279,6 +279,27 @@ class UserController extends AbstractController
         return response_success('success', $dataList);
     }
 
+    /**
+     * 刷新权限节点
+     */
+    public function refreshNode(Enforcer $enforcer): object
+    {
+        $dataList = SysUserGroupModel::query()->get();
+
+        foreach ($dataList as $item) {
+            //删除原有的权限，再重新赋值新的权限
+            $enforcer->deletePermissionsForUser((string)$item['id']);
+
+            //获取菜单下所有api_path,再设置权限
+            $apiPath = SysMenuModel::getApiPath($item['menu_ids']);
+            foreach ($apiPath as $path) {
+                $enforcer->addPermissionForUser((string)$item['id'], $path, 'all');
+            }
+        }
+
+        return response_success();
+    }
+
     /** ================== 操作日志 ================== */
     public function opLogDataList(): object
     {

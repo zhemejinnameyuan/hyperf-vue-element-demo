@@ -49,3 +49,13 @@ export function getMenuTree() {
     })
 }
 
+/**
+ * 刷新节点
+ * @returns {AxiosPromise}
+ */
+export function refreshNode() {
+    return request({
+        url: '/api/user/refreshNode',
+        method: 'get'
+    })
+}

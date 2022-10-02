@@ -2,6 +2,7 @@
     <div class="app-container">
         <div class="top-btn-container">
             <el-button type="primary" size="small" @click="handleAdd()" icon="el-icon-plus">新增分组</el-button>
+            <el-button size="small" @click="refreshNode()" icon="el-icon-refresh">刷新权限</el-button>
         </div>
 
         <div class="search-container">
@@ -76,7 +77,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../../utils";
-    import {getMenuTree, getUserGroupDataList, userGroupDelete, userGroupSave} from "../../../api/system/group";
+    import {getMenuTree, getUserGroupDataList, refreshNode, userGroupDelete, userGroupSave} from "../../../api/system/group";
 
     export default {
         components: {CommonTable},
@@ -161,6 +162,13 @@
             // 搜索
             search() {
                 this.handleCurrentChange(1)
+            },
+            //刷新权限
+            refreshNode() {
+                confirmRequest("确定要同步权限节点吗?",async ()=>{
+                    let response = await refreshNode()
+                    this.$message.success(response.message)
+                })
             },
             //新增
             handleAdd() {
