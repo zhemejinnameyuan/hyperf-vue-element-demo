@@ -1,54 +1,5 @@
 import request from '@/utils/request'
-
-/** ================== 站点分类 ================== */
-/**
- * 分类-获取列表
- * @param data
- * @returns {AxiosPromise}
- */
-export function getSiteTypeDataList(data) {
-    return request({
-        url: `/api/hotArticle/getSiteTypeDataList`,
-        method: 'post',
-        data
-    })
-}
-
-/**
- * 分类-保存
- * @param data
- * @returns {AxiosPromise}
- */
-export function siteTypeSave(data) {
-    return request({
-        url: '/api/hotArticle/siteTypeSave',
-        method: 'post',
-        data
-    })
-}
-
-/**
- * 分类-删除
- * @param id
- * @returns {AxiosPromise}
- */
-export function siteTypeDelete(id) {
-    return request({
-        url: `/api/hotArticle/siteTypeDelete?id=${id}`,
-        method: 'post'
-    })
-}
-
-/**
- * 分类-获取列表select option
- * @returns {AxiosPromise}
- */
-export function getSiteTypeOptionDataList() {
-    return request({
-        url: `/api/hotArticle/siteTypeOptionDataList`,
-        method: 'post'
-    })
-}
+import {jsonToUrlParams} from "@/utils";
 
 
 /** ================== 网站管理 ================== */
@@ -58,23 +9,35 @@ export function getSiteTypeOptionDataList() {
  * @param data
  * @returns {AxiosPromise}
  */
-export function getSiteConfigDataList(data) {
+export function getSite(data) {
     return request({
-        url: `/api/hotArticle/getSiteConfigDataList`,
+        url: `/api/hotArticle/site?` + jsonToUrlParams(data),
+        method: 'get'
+    })
+}
+
+/**
+ * 网站管理-添加
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function addSite(data) {
+    return request({
+        url: '/api/hotArticle/site',
         method: 'post',
         data
     })
 }
 
 /**
- * 网站管理-保存
+ * 网站管理-修改
  * @param data
  * @returns {AxiosPromise}
  */
-export function siteConfigSave(data) {
+export function updateSite(data) {
     return request({
-        url: '/api/hotArticle/siteConfigSave',
-        method: 'post',
+        url: '/api/hotArticle/site',
+        method: 'put',
         data
     })
 }
@@ -84,10 +47,10 @@ export function siteConfigSave(data) {
  * @param id
  * @returns {AxiosPromise}
  */
-export function siteConfigDelete(id) {
+export function deleteSite(id) {
     return request({
-        url: `/api/hotArticle/siteConfigDelete?id=${id}`,
-        method: 'post'
+        url: `/api/hotArticle/site?id=${id}`,
+        method: 'delete'
     })
 }
 
@@ -98,7 +61,7 @@ export function siteConfigDelete(id) {
  */
 export function runSite(id) {
     return request({
-        url: `/api/hotArticle/runSite?id=${id}`,
+        url: `/api/hotArticle/site/runSite?id=${id}`,
         method: 'post'
     })
 }

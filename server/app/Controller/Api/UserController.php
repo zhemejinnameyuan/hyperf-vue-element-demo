@@ -38,8 +38,6 @@ class UserController extends AbstractController
         parent::__construct($container);
     }
 
-    /** ================== 登录后获取信息 ================== */
-
     /**
      * 退出.
      */
@@ -49,7 +47,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * 获取token.
+     * 登录后获取token.
      */
     public function info(): object
     {

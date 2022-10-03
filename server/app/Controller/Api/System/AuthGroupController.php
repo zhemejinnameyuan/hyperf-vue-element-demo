@@ -70,33 +70,28 @@ class AuthGroupController extends AbstractController
     {
         $this->authGroupRequest->scene('add')->validateResolved();
 
-        $saveData = $this->request->inputs(['id', 'name', 'status', 'menu_ids']);
+        $saveData = $this->request->inputs([ 'name', 'status', 'menu_ids']);
 
-        if ($saveData['id']) {
-            //更新
-            $result = SysUserGroupModel::updateData($saveData['id'], $saveData);
-        } else {
-            //新增
-            $existInfo = SysUserGroupModel::query()->where('name', $saveData['name'])->count();
-            if ($existInfo) {
-                return response_error('名称已被使用,请更换再试');
-            }
-
-            $result = SysUserGroupModel::insertData($saveData);
-            $saveData['id'] = $result;
+        //新增
+        $existInfo = SysUserGroupModel::query()->where('name', $saveData['name'])->count();
+        if ($existInfo) {
+            return response_error('名称已被使用,请更换再试');
         }
 
-        if ($result !== false) {
+        $authGroupId = SysUserGroupModel::insertData($saveData);
+
+
+        if ($authGroupId !== false) {
             //删除原有的权限，再重新赋值新的权限
-            $enforcer->deletePermissionsForUser((string) $saveData['id']);
+            $enforcer->deletePermissionsForUser((string) $authGroupId);
 
             //获取菜单下所有api_path,再设置权限
             $apiPath = SysMenuModel::getApiPath($saveData['menu_ids']);
             foreach ($apiPath as $path) {
-                $enforcer->addPermissionForUser((string) $saveData['id'], $path, 'all');
+                $enforcer->addPermissionForUser((string) $authGroupId, $path, 'all');
             }
 
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 权限分组:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $authGroupId, '新增权限分组:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -112,19 +107,8 @@ class AuthGroupController extends AbstractController
 
         $saveData = $this->request->inputs(['id', 'name', 'status', 'menu_ids']);
 
-        if ($saveData['id']) {
-            //更新
-            $result = SysUserGroupModel::updateData($saveData['id'], $saveData);
-        } else {
-            //新增
-            $existInfo = SysUserGroupModel::query()->where('name', $saveData['name'])->count();
-            if ($existInfo) {
-                return response_error('名称已被使用,请更换再试');
-            }
-
-            $result = SysUserGroupModel::insertData($saveData);
-            $saveData['id'] = $result;
-        }
+        //更新
+        $result = SysUserGroupModel::updateData($saveData['id'], $saveData);
 
         if ($result !== false) {
             //删除原有的权限，再重新赋值新的权限
@@ -136,7 +120,7 @@ class AuthGroupController extends AbstractController
                 $enforcer->addPermissionForUser((string) $saveData['id'], $path, 'all');
             }
 
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '添加/更新 权限分组:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '更新权限分组:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -161,7 +145,7 @@ class AuthGroupController extends AbstractController
             //删除权限分组下所有用户
             $enforcer->deleteRole((string) $id);
 
-            $this->addOpLog($this->opBusinessType, (int) $id, '删除 权限分组');
+            $this->addOpLog($this->opBusinessType, (int) $id, '删除权限分组');
             return response_success();
         }
         return response_error();

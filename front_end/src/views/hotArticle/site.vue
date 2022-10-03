@@ -109,7 +109,8 @@
 <script>
     import CommonTable from '../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../utils";
-    import {getSiteConfigDataList, getSiteTypeOptionDataList, runSite, siteConfigDelete, siteConfigSave} from "../../api/hotArticle/site";
+    import {addSite, deleteSite, getSite, runSite, updateSite} from "../../api/hotArticle/site";
+    import {getOptionList} from "../../api/hotArticle/type";
 
     export default {
         components: {CommonTable},
@@ -198,7 +199,7 @@
             this.getDataList();
 
             //获取网站分类
-            getSiteTypeOptionDataList().then(response => {
+            getOptionList().then(response => {
                 this.siteTypeOptions = response.data
             })
         },
@@ -229,7 +230,7 @@
                 confirmRequest(
                     '确定要删除此数据吗?',
                     async () => {
-                        let response = await siteConfigDelete(row.id)
+                        let response = await deleteSite(row.id)
                         this.$message.success(response.message)
                         this.getDataList()
                     }
@@ -239,13 +240,20 @@
             confirmRole(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        siteConfigSave(this.dataInfo).then(response => {
-                            this.dialogVisible = false
-                            this.$message.success(response.message)
-                            this.getDataList()
-                        }).catch(error => {
+                        if(this.dataInfo.id>0){
+                            updateSite(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }else{
+                            addSite(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }
 
-                        })
 
                     } else {
                         return false;
@@ -260,7 +268,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData);
-                let response = await getSiteConfigDataList(params)
+                let response = await getSite(params)
 
                 this.commonTable.dataList = response.data.data
                 this.commonTable.totalCount = response.data.count
