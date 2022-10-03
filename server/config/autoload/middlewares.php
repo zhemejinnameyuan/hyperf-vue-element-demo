@@ -16,6 +16,6 @@ return [
         Hyperf\Validation\Middleware\ValidationMiddleware::class, //验证器
         \App\Middleware\CorsMiddleware::class, //跨域
         //        Phper666\JWTAuth\Middleware\JWTAuthMiddleware::class,//jwt
-                \App\Middleware\CasbinMiddleware::class,//权限
+        \App\Middleware\CasbinMiddleware::class, //权限
     ],
 ];

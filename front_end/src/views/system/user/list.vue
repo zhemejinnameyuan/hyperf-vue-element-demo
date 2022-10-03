@@ -93,7 +93,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../../utils";
-    import {getUserDataList, userDelete, userSave,getUserGroupOptionDataList} from "../../../api/system/user";
+    import {getUserGroupOptionDataList, deleteUser, getUser, updateUser, addUser} from "../../../api/system/user";
 
     export default {
         components: {CommonTable},
@@ -192,7 +192,7 @@
             //删除
             handleDelete(row) {
                 confirmRequest('确定要删除此数据吗?',async ()=>{
-                    let response = await userDelete(row.id)
+                    let response = await deleteUser(row.id)
                     this.$message.success(response.message)
                     this.getDataList()
                 })
@@ -201,13 +201,20 @@
             confirmRole(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userSave(this.dataInfo).then(response => {
-                            this.dialogVisible = false
-                            this.$message.success(response.message)
-                            this.getDataList()
-                        }).catch(error => {
+                        if(this.dataInfo.id > 0){
+                            updateUser(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }else{
+                            addUser(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }
 
-                        })
 
                     } else {
                         return false;
@@ -222,7 +229,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData)
-                let response = await getUserDataList(params)
+                let response = await getUser(params)
 
 
                 this.commonTable.dataList = response.data.data

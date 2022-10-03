@@ -90,7 +90,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../../utils";
-    import {getMenuDataList, menuDelete, menuSave} from "../../../api/system/menu";
+    import {getMenu, deleteMenu, addMenu, updateMenu} from "../../../api/system/menu";
 
     export default {
         components: {CommonTable},
@@ -218,7 +218,7 @@
             //删除
             handleDelete(row) {
                 confirmRequest('确定要删除此数据吗?',async ()=>{
-                    let response = await menuDelete(row.id)
+                    let response = await deleteMenu(row.id)
                     this.$message.success(response.message)
                     this.getDataList()
                 })
@@ -233,14 +233,19 @@
             confirmRole(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        menuSave(this.dataInfo).then(response => {
-                            this.dialogVisible = false
-                            this.$message.success(response.message)
-                            this.getDataList()
-                        }).catch(error => {
-
-                        })
-
+                        if(this.dataInfo.id >0){
+                            updateMenu(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }else{
+                            addMenu(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }
                     } else {
                         return false;
                     }
@@ -254,7 +259,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData);
-                let response = await getMenuDataList(params);
+                let response = await getMenu(params);
 
 
                 this.commonTable.dataList = response.data.data

@@ -54,7 +54,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {mergeJson} from "../../../utils";
-    import {getOpBusinessTypeDataList, getOpLogDataList} from "../../../api/system/opLog";
+    import {getOperateLog, getOperateBusinessType} from "../../../api/system/operateLog";
 
     export default {
         components: {CommonTable},
@@ -97,7 +97,7 @@
             this.getDataList();
 
             // //获取业务类型
-            getOpBusinessTypeDataList().then(response => {
+            getOperateBusinessType().then(response => {
                 this.businessTypeOption = response.data
             })
         },
@@ -111,7 +111,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData)
-                let response = await getOpLogDataList(params)
+                let response = await getOperateLog(params)
 
 
                 this.commonTable.dataList = response.data.data

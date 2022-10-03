@@ -1,15 +1,15 @@
 import request from '@/utils/request'
+import {jsonToUrlParams} from "@/utils";
 
 /**
  * 菜单-获取列表
  * @param data
  * @returns {AxiosPromise}
  */
-export function getMenuDataList(data) {
+export function getMenu(data) {
     return request({
-        url: `/api/system/menuDataList`,
-        method: 'post',
-        data
+        url: `/api/system/menu?` + jsonToUrlParams(data),
+        method: 'get',
     })
 }
 
@@ -18,10 +18,23 @@ export function getMenuDataList(data) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function menuSave(data) {
+export function addMenu(data) {
     return request({
-        url: '/api/system/menuSave',
+        url: '/api/system/menu',
         method: 'post',
+        data
+    })
+}
+
+/**
+ * 菜单-更新
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function updateMenu(data) {
+    return request({
+        url: '/api/system/menu',
+        method: 'put',
         data
     })
 }
@@ -31,9 +44,9 @@ export function menuSave(data) {
  * @param id
  * @returns {AxiosPromise}
  */
-export function menuDelete(id) {
+export function deleteMenu(id) {
     return request({
-        url: `/api/system/menuDelete?id=${id}`,
-        method: 'post'
+        url: `/api/system/menu?id=${id}`,
+        method: 'delete'
     })
 }

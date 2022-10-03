@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Model\Admin;
 
 use App\Model\Model;
@@ -87,31 +86,7 @@ SQL;
     }
 
     /**
-     * 处理菜单层级.
-     */
-    protected static function handelMenuList(array $menuList, int $pid): array
-    {
-        $tree = [];
-        foreach ($menuList as $key => $value) {
-            if ($value['pid'] == $pid) {
-                //拼装meta
-                $value['meta'] = [
-                    'title' => $value['name'],
-                    'icon' => $value['icon'],
-                ];
-                unset($value['icon']);
-
-                //拼装子级
-                $value['children'] = self::handelMenuList($menuList, $value['id']);
-
-                $tree[] = $value;
-            }
-        }
-        return $tree;
-    }
-
-    /**
-     * 获取分组对应的api path
+     * 获取分组对应的api path.
      * @param $ids
      * @return array
      */
@@ -134,5 +109,29 @@ SQL;
         }
 
         return $apiPath;
+    }
+
+    /**
+     * 处理菜单层级.
+     */
+    protected static function handelMenuList(array $menuList, int $pid): array
+    {
+        $tree = [];
+        foreach ($menuList as $key => $value) {
+            if ($value['pid'] == $pid) {
+                //拼装meta
+                $value['meta'] = [
+                    'title' => $value['name'],
+                    'icon' => $value['icon'],
+                ];
+                unset($value['icon']);
+
+                //拼装子级
+                $value['children'] = self::handelMenuList($menuList, $value['id']);
+
+                $tree[] = $value;
+            }
+        }
+        return $tree;
     }
 }

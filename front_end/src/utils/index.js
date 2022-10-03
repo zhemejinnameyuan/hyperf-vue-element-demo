@@ -38,3 +38,10 @@ export function confirmRequest(title = '确定要操作吗?', callbackFunction) 
         console.info(err)
     })
 }
+
+export  function jsonToUrlParams(json){
+    return Object.keys(json).map(function (key) {
+        return encodeURIComponent(key) + "=" + encodeURIComponent(json[key]);
+    }).join("&");
+}
+

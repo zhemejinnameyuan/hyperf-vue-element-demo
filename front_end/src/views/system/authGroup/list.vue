@@ -77,7 +77,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../../utils";
-    import {getMenuTree, getUserGroupDataList, refreshNode, userGroupDelete, userGroupSave} from "../../../api/system/group";
+    import {addAuthGroup, deleteAuthGroup, getAuthGroup, getMenuTree, refreshNode, updateAuthGroup} from "../../../api/system/authGroup";
 
     export default {
         components: {CommonTable},
@@ -200,7 +200,7 @@
             //删除
             handleDelete(row) {
                 confirmRequest('确定要删除此数据吗?',async ()=>{
-                    let response = await userGroupDelete(row.id)
+                    let response = await deleteAuthGroup(row.id)
                     this.$message.success(response.message)
                     this.getDataList()
                 })
@@ -215,14 +215,19 @@
 
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        userGroupSave(this.dataInfo).then(response => {
-                            this.dialogVisible = false
-                            this.$message.success(response.message)
-                            this.getDataList()
-                        }).catch(error => {
-
-                        })
-
+                        if(this.dataInfo.id > 0){
+                            updateAuthGroup(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }else{
+                            addAuthGroup(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }
                     } else {
                         return false;
                     }
@@ -237,7 +242,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData)
-                let response = await getUserGroupDataList(params)
+                let response = await getAuthGroup(params)
 
 
                 this.commonTable.dataList = response.data.data

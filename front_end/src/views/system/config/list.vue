@@ -63,7 +63,7 @@
 <script>
     import CommonTable from '../../../components/CommonTable'
     import {confirmRequest, mergeJson} from "../../../utils";
-    import {configDelete, configSave, getConfigDataList} from "../../../api/system/config";
+    import {addConfig, deleteConfig, getConfig, saveConfig, updateConfig} from "../../../api/system/config";
 
     export default {
         components: {CommonTable},
@@ -151,7 +151,7 @@
             //删除
             handleDelete(row) {
                 confirmRequest('确定要删除此数据吗?',async ()=>{
-                    let response = await configDelete(row.id)
+                    let response = await deleteConfig(row.id)
                     this.$message.success(response.message)
                     this.getDataList()
                 })
@@ -160,13 +160,19 @@
             confirmRole(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        configSave(this.dataInfo).then(response => {
-                            this.dialogVisible = false
-                            this.$message.success(response.message)
-                            this.getDataList()
-                        }).catch(error => {
-
-                        })
+                        if(this.dataInfo.id >0){
+                            updateConfig(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }else{
+                            addConfig(this.dataInfo).then(response => {
+                                this.dialogVisible = false
+                                this.$message.success(response.message)
+                                this.getDataList()
+                            })
+                        }
 
                     } else {
                         return false;
@@ -181,7 +187,7 @@
             async getDataList() {
                 //拼装分页和查询参数
                 let params = mergeJson(this.commonTable.pages, this.searchData)
-                let response = await getConfigDataList(params)
+                let response = await getConfig(params)
 
 
                 this.commonTable.dataList = response.data.data

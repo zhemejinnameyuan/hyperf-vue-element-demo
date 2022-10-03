@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Model\Admin;
 
 use App\Constants\UserCode;
@@ -43,10 +42,6 @@ class SysUserModel extends Model
 
     /**
      * 获取用户数据.
-     * @param array $where
-     * @param int $page
-     * @param int $limit
-     * @return array
      */
     public static function getDataList(array $where = [], int $page, int $limit): array
     {
@@ -73,16 +68,13 @@ class SysUserModel extends Model
 
     /**
      * 登录.
-     * @param string $username
-     * @param string $password
-     * @return array
      */
     public static function login(string $username, string $password): array
     {
         try {
             $info = parent::query()->where('username', $username)->first();
 
-            if (!$info) {
+            if (! $info) {
                 throw new Exception(UserCode::getMessage(UserCode::NOT_FOUND), UserCode::NOT_FOUND);
             }
 
@@ -90,9 +82,9 @@ class SysUserModel extends Model
                 throw new Exception(UserCode::getMessage(UserCode::MAX_PASSWORD_ERROR), UserCode::MAX_PASSWORD_ERROR);
             }
 
-            if (!password_verify($password, $info['password'])) {
+            if (! password_verify($password, $info['password'])) {
                 //更新密码错误次数
-                self::updateUserInfo((int)$info['id'], ['password_error_count' => $info['password_error_count'] + 1]);
+                self::updateUserInfo((int) $info['id'], ['password_error_count' => $info['password_error_count'] + 1]);
 
                 throw new Exception(UserCode::getMessage(UserCode::PASSWORD_ERROR), UserCode::PASSWORD_ERROR);
             }
@@ -101,7 +93,7 @@ class SysUserModel extends Model
             }
 
             //更新最后登录IP
-            self::updateUserInfo((int)$info['id'], ['login_ip' => get_client_ip()]);
+            self::updateUserInfo((int) $info['id'], ['login_ip' => get_client_ip()]);
 
             return [
                 'code' => UserCode::SUCCESS,
@@ -118,8 +110,6 @@ class SysUserModel extends Model
 
     /**
      * 更新用户信息.
-     * @param int $id
-     * @param array $save
      */
     protected static function updateUserInfo(int $id, array $save): void
     {
