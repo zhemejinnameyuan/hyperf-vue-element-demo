@@ -39,6 +39,11 @@ export function confirmRequest(title = '确定要操作吗?', callbackFunction) 
     })
 }
 
+/**
+ * json 转换为 url 参数
+ * @param json
+ * @returns {string}
+ */
 export  function jsonToUrlParams(json){
     return Object.keys(json).map(function (key) {
         return encodeURIComponent(key) + "=" + encodeURIComponent(json[key]);

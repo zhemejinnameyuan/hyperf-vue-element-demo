@@ -50,7 +50,7 @@
 
 
             handleSelect(item) {
-                this.suggestion.address = item.address
+                this.suggestion.address = item.address;
                 this.suggestion.value = item.value
             }
         },
