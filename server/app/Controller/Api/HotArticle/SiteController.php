@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller\Api\HotArticle;
 
 use App\Constants\OpBusinessType;
@@ -19,7 +18,6 @@ use App\Model\Admin\SiteTypeModel;
 use App\Request\HotArticle\SiteRequest;
 use App\Service\Crontab\TopArticleService;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -37,6 +35,12 @@ use Psr\Container\ContainerInterface;
 class SiteController extends AbstractController
 {
     /**
+     * @Inject
+     * @var SiteRequest
+     */
+    public $siteRequest;
+
+    /**
      * 操作业务类型.
      */
     protected $opBusinessType = OpBusinessType::HOT_ARTICLE;
@@ -48,12 +52,6 @@ class SiteController extends AbstractController
      */
     protected $topArticleService;
 
-    /**
-     * @Inject()
-     * @var SiteRequest
-     */
-    public $siteRequest;
-
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
@@ -61,7 +59,7 @@ class SiteController extends AbstractController
 
     /**
      *  网站管理-获取分页数据.
-     * @RequestMapping(path="",methods="GET")
+     * @RequestMapping(path="", methods="GET")
      */
     public function getSite(): object
     {
@@ -80,10 +78,9 @@ class SiteController extends AbstractController
         return response_success('success', $dataList);
     }
 
-
     /**
      * 网站管理-添加.
-     * @RequestMapping(path="",methods="POST")
+     * @RequestMapping(path="", methods="POST")
      */
     public function addSite(): object
     {
@@ -98,7 +95,7 @@ class SiteController extends AbstractController
         $result = SiteConfigModel::insertData($saveData);
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '新增网站:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '新增网站:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -106,7 +103,7 @@ class SiteController extends AbstractController
 
     /**
      * 网站管理-更新.
-     * @RequestMapping(path="",methods="PUT")
+     * @RequestMapping(path="", methods="PUT")
      */
     public function updateSite(): object
     {
@@ -117,16 +114,15 @@ class SiteController extends AbstractController
         $result = SiteConfigModel::updateData($saveData['id'], $saveData);
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '更新网站:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '更新网站:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
     }
 
-
     /**
      * 网站管理-删除.
-     * @RequestMapping(path="",methods="DELETE")
+     * @RequestMapping(path="", methods="DELETE")
      */
     public function deleteSite(): object
     {
@@ -135,7 +131,7 @@ class SiteController extends AbstractController
 
         $result = SiteConfigModel::query()->where('id', $id)->delete();
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$id, '删除网站');
+            $this->addOpLog($this->opBusinessType, (int) $id, '删除网站');
             return response_success();
         }
         return response_error();
@@ -143,7 +139,7 @@ class SiteController extends AbstractController
 
     /**
      * 手动执行.
-     * @RequestMapping(path="runSite",methods="POST")
+     * @RequestMapping(path="runSite", methods="POST")
      */
     public function runSite()
     {
@@ -151,7 +147,7 @@ class SiteController extends AbstractController
 
         $siteInfo = SiteConfigModel::query()->find($id);
 
-        if (!method_exists($this->topArticleService, $siteInfo['english_name'])) {
+        if (! method_exists($this->topArticleService, $siteInfo['english_name'])) {
             return response_error("{$siteInfo['english_name']} not exists ");
         }
         $data = $this->topArticleService->{$siteInfo['english_name']}($siteInfo);

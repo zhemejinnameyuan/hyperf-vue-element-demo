@@ -70,14 +70,22 @@ class SignController extends AbstractController
 
         $allSign = $this->redisClient->get($signCacheKey);
 
-        $hex_str = unpack('H*', $allSign)[1];
-        //处理补位
-        $hex_str = str_pad(decbin(hexdec($hex_str)), PHP_INT_SIZE * 4, '0', STR_PAD_LEFT);
+        $hexStr = unpack('H*', $allSign)[1];
+
+        $hexStr = str_pad($hexStr, PHP_INT_SIZE, '0', STR_PAD_RIGHT);
+
+        $hexStrArr = str_split($hexStr, PHP_INT_SIZE);
+
+        // 位数据的二进制字符串
+        $bitmap_bin_str = '';
+        array_walk($hexStrArr, function ($hex_str_chunk) use (&$bitmap_bin_str) {
+            $bitmap_bin_str .= str_pad(decbin(hexdec($hex_str_chunk)), PHP_INT_SIZE * 4, '0', STR_PAD_LEFT);
+        });
 
         //转换为打卡的日期
         $days = [];
-        for ($i = 0; $i <= strlen($hex_str); ++$i) {
-            $daySign = substr($hex_str, $i, 1);
+        for ($i = 0; $i <= strlen($bitmap_bin_str); ++$i) {
+            $daySign = substr($bitmap_bin_str, $i, 1);
             if ($daySign == 1) {
                 $days[] = date('Y-m-d', strtotime("+{$i} day", $startDate));
             }

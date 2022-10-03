@@ -70,7 +70,7 @@ class AuthGroupController extends AbstractController
     {
         $this->authGroupRequest->scene('add')->validateResolved();
 
-        $saveData = $this->request->inputs([ 'name', 'status', 'menu_ids']);
+        $saveData = $this->request->inputs(['name', 'status', 'menu_ids']);
 
         //新增
         $existInfo = SysUserGroupModel::query()->where('name', $saveData['name'])->count();
@@ -79,7 +79,6 @@ class AuthGroupController extends AbstractController
         }
 
         $authGroupId = SysUserGroupModel::insertData($saveData);
-
 
         if ($authGroupId !== false) {
             //删除原有的权限，再重新赋值新的权限

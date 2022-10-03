@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller\Api\HotArticle;
 
 use App\Constants\OpBusinessType;
@@ -17,9 +16,7 @@ use App\Controller\AbstractController;
 use App\Model\Admin\SiteConfigModel;
 use App\Model\Admin\SiteTypeModel;
 use App\Request\HotArticle\TypeRequest;
-use App\Service\Crontab\TopArticleService;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -37,25 +34,24 @@ use Psr\Container\ContainerInterface;
 class TypeController extends AbstractController
 {
     /**
-     * 操作业务类型.
-     */
-    protected $opBusinessType = OpBusinessType::HOT_ARTICLE;
-
-    /**
-     * @Inject()
+     * @Inject
      * @var TypeRequest
      */
     public $typeRequest;
+
+    /**
+     * 操作业务类型.
+     */
+    protected $opBusinessType = OpBusinessType::HOT_ARTICLE;
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
     }
 
-
     /**
      * 站点分类-获取分页数据.
-     * @RequestMapping(path="",methods="GET")
+     * @RequestMapping(path="", methods="GET")
      */
     public function getType(): object
     {
@@ -67,7 +63,7 @@ class TypeController extends AbstractController
 
     /**
      * 站点分类-删除.
-     * @RequestMapping(path="",methods="DELETE")
+     * @RequestMapping(path="", methods="DELETE")
      */
     public function deleteType(): object
     {
@@ -82,7 +78,7 @@ class TypeController extends AbstractController
 
         $result = SiteTypeModel::query()->where('id', $id)->delete();
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$id, '删除分类');
+            $this->addOpLog($this->opBusinessType, (int) $id, '删除分类');
             return response_success();
         }
         return response_error();
@@ -90,11 +86,11 @@ class TypeController extends AbstractController
 
     /**
      * 站点分类-保存.
-     * @RequestMapping(path="",methods="POST")
+     * @RequestMapping(path="", methods="POST")
      */
     public function addType(): object
     {
-        $this->typeRequest->scene("add")->validateResolved();
+        $this->typeRequest->scene('add')->validateResolved();
 
         $saveData = $this->request->inputs(['name', 'status']);
 
@@ -104,7 +100,7 @@ class TypeController extends AbstractController
         }
         $result = SiteTypeModel::insertData($saveData);
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '新增分类:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '新增分类:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -112,17 +108,17 @@ class TypeController extends AbstractController
 
     /**
      * 站点分类-保存.
-     * @RequestMapping(path="",methods="PUT")
+     * @RequestMapping(path="", methods="PUT")
      */
     public function updateType(): object
     {
-        $this->typeRequest->scene("update")->validateResolved();
+        $this->typeRequest->scene('update')->validateResolved();
 
         $saveData = $this->request->inputs(['id', 'name', 'status']);
 
         $result = SiteTypeModel::updateData($saveData['id'], $saveData);
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '更新分类:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '更新分类:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -130,7 +126,7 @@ class TypeController extends AbstractController
 
     /**
      * 获取站点分类select option.
-     * @RequestMapping(path="optionList",methods="GET")
+     * @RequestMapping(path="optionList", methods="GET")
      */
     public function optionList(): object
     {
@@ -138,5 +134,4 @@ class TypeController extends AbstractController
 
         return response_success('success', $dataList);
     }
-
 }
