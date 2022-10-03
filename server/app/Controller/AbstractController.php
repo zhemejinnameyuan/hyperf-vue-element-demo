@@ -73,7 +73,7 @@ abstract class AbstractController
     /**
      * 获取当前页码
      */
-    public function getPage(): int
+    protected function getPage(): int
     {
         return intval($this->request->input('currentPage', 0));
     }
@@ -81,7 +81,7 @@ abstract class AbstractController
     /**
      * 获取每页显示数量.
      */
-    public function getLimit(): int
+    protected function getLimit(): int
     {
         return intval($this->request->input('pageSize', 15));
     }
@@ -93,7 +93,7 @@ abstract class AbstractController
      * @param string $content 日志内容
      * @return mixed
      */
-    public function addOpLog(int $business_type = 0, int $business_id = 0, string $content = ''): void
+    protected function addOpLog(int $business_type = 0, int $business_id = 0, string $content = ''): void
     {
         $model = make(OpLogModel::class);
 
@@ -111,7 +111,7 @@ abstract class AbstractController
      * @param $rules
      * @param $messages
      */
-    public function validationCheck(array $rules, array $messages): void
+    protected function validationCheck(array $rules, array $messages): void
     {
         $validator = $this->validationFactory->make(
             $this->request->all(),

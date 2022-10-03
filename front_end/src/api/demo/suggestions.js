@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import {jsonToUrlParams} from "@/utils";
 
 /**
  * 搜索建议
@@ -7,9 +8,8 @@ import request from '@/utils/request'
  */
 export function getInputSuggestions(data) {
     return request({
-        url: `/api/demo/elasticsearch/suggestions`,
-        method: 'post',
-        data
+        url: '/api/demo/elasticsearch/suggestions?' + jsonToUrlParams(data),
+        method: 'get'
     })
 }
 

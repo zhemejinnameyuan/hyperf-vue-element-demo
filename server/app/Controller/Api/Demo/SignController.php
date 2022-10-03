@@ -12,15 +12,16 @@ declare(strict_types=1);
 namespace App\Controller\Api\Demo;
 
 use App\Controller\AbstractController;
-use Hyperf\HttpServer\Annotation\AutoController;
+use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 use Phper666\JWTAuth\Middleware\JWTAuthMiddleware;
 use Psr\Container\ContainerInterface;
 
 /**
  * 签到demo.
- * @AutoController(prefix="api/demo/sign")
+ * @Controller(prefix="api/demo/sign")
  * @Middlewares({
  *     @Middleware(JWTAuthMiddleware::class)
  * })
@@ -34,6 +35,7 @@ class SignController extends AbstractController
 
     /**
      * 入口.
+     * @RequestMapping(path="", methods="POST")
      */
     public function index(): object
     {
@@ -61,6 +63,10 @@ class SignController extends AbstractController
         return response_success('签到成功');
     }
 
+    /**
+     * 获取已签到天数.
+     * @RequestMapping(path="getSignDays", methods="GET")
+     */
     public function getSignDays()
     {
         $startDate = strtotime(date('Y-m-01'));

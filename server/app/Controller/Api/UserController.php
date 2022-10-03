@@ -14,14 +14,15 @@ namespace App\Controller\Api;
 use App\Constants\OpBusinessType;
 use App\Controller\AbstractController;
 use App\Model\Admin\SysMenuModel;
-use Hyperf\HttpServer\Annotation\AutoController;
+use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 use Phper666\JWTAuth\Middleware\JWTAuthMiddleware;
 use Psr\Container\ContainerInterface;
 
 /**
- * @AutoController(prefix="api/user")
+ * @Controller(prefix="api/user")
  * @Middlewares({
  *     @Middleware(JWTAuthMiddleware::class)
  * })
@@ -40,6 +41,7 @@ class UserController extends AbstractController
 
     /**
      * 退出.
+     * @RequestMapping(path="logout", methods="POST")
      */
     public function logout(): object
     {
@@ -48,6 +50,7 @@ class UserController extends AbstractController
 
     /**
      * 登录后获取token.
+     * @RequestMapping(path="info", methods="GET")
      */
     public function info(): object
     {
@@ -63,6 +66,7 @@ class UserController extends AbstractController
 
     /**
      * 获取左侧导航列表.
+     * @RequestMapping(path="getMenuList", methods="GET")
      */
     public function getMenuList(): object
     {

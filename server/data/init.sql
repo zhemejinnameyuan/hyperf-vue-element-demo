@@ -207,10 +207,8 @@ INSERT INTO `sys_menu` VALUES (7, 2, '操作日志', 1, 'operateLog', '/api/syst
 INSERT INTO `sys_menu` VALUES (23, 2, '配置管理', 1, 'config', '/api/system/config', 'el-icon-setting', 'system/config/list', NULL, 9, 1, '2020-11-12 12:05:40', '2022-10-03 16:35:05');
 INSERT INTO `sys_menu` VALUES (24, 0, 'Demo', 1, '/demo', NULL, ' el-icon-magic-stick', 'Layout', NULL, 3, 1, '2020-11-13 11:22:30', '2022-09-28 10:15:26');
 INSERT INTO `sys_menu` VALUES (25, 24, '输入建议', 1, 'suggestions', NULL, 'el-icon-s-order', 'demo/suggestions', NULL, 0, 1, '2020-11-13 11:30:24', '2020-11-13 11:30:24');
-INSERT INTO `sys_menu` VALUES (26, 24, '转盘抽奖', 1, 'lottery', NULL, 'el-icon-s-order', 'demo/lottery', NULL, 0, 1, '2020-11-21 14:54:44', '2020-11-21 14:55:12');
 INSERT INTO `sys_menu` VALUES (27, 24, '签到', 1, 'sign', NULL, 'el-icon-s-order', 'demo/sign', NULL, 0, 1, '2020-11-23 15:14:43', '2020-11-23 15:14:51');
 INSERT INTO `sys_menu` VALUES (28, 24, 'AES解密', 1, 'aes', NULL, 'el-icon-s-order', 'demo/aes', NULL, 0, 1, '2020-11-26 22:06:38', '2020-11-26 22:06:51');
-INSERT INTO `sys_menu` VALUES (29, 24, '基金持仓', 1, 'fund', NULL, 'el-icon-s-order', 'demo/fund', NULL, 0, 1, '2020-12-07 16:04:31', '2020-12-07 16:04:39');
 INSERT INTO `sys_menu` VALUES (30, 0, '今日热榜', 1, '/hotArticle', NULL, 'el-icon-magic-stick', 'Layout', NULL, 4, 1, '2020-12-29 12:23:17', '2022-09-28 17:43:35');
 INSERT INTO `sys_menu` VALUES (31, 30, '网站分类', 1, 'type', '/api/hotArticle/site\n/api/hotArticle/site/optionList ', 'el-icon-s-order', 'hotArticle/type', NULL, 0, 1, '2020-12-29 12:24:15', '2022-10-03 16:36:42');
 INSERT INTO `sys_menu` VALUES (32, 30, '网站管理', 1, 'site', '/api/hotArticle/site\n/api/hotArticle/site/runSite', 'el-icon-s-order', 'hotArticle/site', NULL, 0, 1, '2020-12-29 12:35:30', '2022-10-03 16:37:14');

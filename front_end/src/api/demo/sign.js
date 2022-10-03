@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export function doSign() {
     return request({
-        url: `/api/demo/sign/index`,
+        url: `/api/demo/sign`,
         method: 'post',
     })
 }
@@ -18,7 +18,7 @@ export function doSign() {
 export function getSignDays() {
     return request({
         url: `/api/demo/sign/getSignDays`,
-        method: 'post',
+        method: 'get',
     })
 }
 

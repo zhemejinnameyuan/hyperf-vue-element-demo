@@ -14,14 +14,15 @@ namespace App\Controller\Api\Demo;
 use App\Controller\AbstractController;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Elasticsearch\ClientBuilderFactory;
-use Hyperf\HttpServer\Annotation\AutoController;
+use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 use Phper666\JWTAuth\Middleware\JWTAuthMiddleware;
 use Psr\Container\ContainerInterface;
 
 /**
- * @AutoController(prefix="api/demo/elasticsearch")
+ * @Controller(prefix="api/demo/elasticsearch")
  * @Middlewares({
  *     @Middleware(JWTAuthMiddleware::class)
  * })
@@ -47,6 +48,7 @@ class ElasticsearchController extends AbstractController
 
     /**
      * 状态
+     * @RequestMapping(path="index", methods="GET")
      */
     public function info(): array
     {
@@ -55,6 +57,7 @@ class ElasticsearchController extends AbstractController
 
     /**
      * 创建索引.
+     * @RequestMapping(path="create", methods="POST")
      */
     public function create()
     {
@@ -120,6 +123,10 @@ class ElasticsearchController extends AbstractController
         }
     }
 
+    /**
+     * 查询.
+     * @RequestMapping(path="suggestions", methods="GET")
+     */
     public function suggestions()
     {
 //        //单个字段查询
@@ -191,6 +198,7 @@ class ElasticsearchController extends AbstractController
 
     /**
      * 删除索引.
+     * @RequestMapping(path="", methods="DELETE")
      */
     public function delete()
     {

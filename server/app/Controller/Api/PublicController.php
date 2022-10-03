@@ -14,12 +14,13 @@ namespace App\Controller\Api;
 use App\Constants\UserCode;
 use App\Controller\AbstractController;
 use App\Model\Admin\SysUserModel;
-use Hyperf\HttpServer\Annotation\AutoController;
+use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 use Psr\Container\ContainerInterface;
 
 /**
  * 公共控制器，不使用jwt中间件.
- * @AutoController(prefix="api/public")
+ * @Controller(prefix="api/public")
  */
 class PublicController extends AbstractController
 {
@@ -30,6 +31,7 @@ class PublicController extends AbstractController
 
     /**
      * 登录.
+     * @RequestMapping(path="login", methods="POST")
      */
     public function login(): object
     {
@@ -83,6 +85,7 @@ class PublicController extends AbstractController
 
     /**
      * 获取系统信息.
+     * @RequestMapping(path="systemInfo", methods="GET")
      */
     public function systemInfo(): object
     {
