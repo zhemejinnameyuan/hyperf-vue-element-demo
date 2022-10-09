@@ -237,8 +237,8 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` VALUES (1, 'admin', '$2y$10$YIquEXxiefeUBUKzDKJUcOsrTvjiY0DC0O1xzcdq.7KnFWOt8jt6O', 'admin', 1, 1, 4, '127.0.0.1', '2020-10-28 12:17:24', '2022-09-29 11:21:54', 100.05);
-INSERT INTO `sys_user` VALUES (2, 'test', '$2y$10$fh/3vWD7ubjOtiEvBYRTw.RaTJ5SnVcro6YH9VcJf0Y/XyFAsirxu', 'test11', 2, 1, 2, '127.0.0.1', '2020-10-28 12:53:52', '2022-09-29 11:21:52', 100.05);
+INSERT INTO `sys_user` VALUES (1, 'admin', '$2y$10$YIquEXxiefeUBUKzDKJUcOsrTvjiY0DC0O1xzcdq.7KnFWOt8jt6O', 'admin', 1, 1, 4, '127.0.0.1', '2020-10-28 12:17:24', '2022-09-29 11:21:54');
+INSERT INTO `sys_user` VALUES (2, 'test', '$2y$10$fh/3vWD7ubjOtiEvBYRTw.RaTJ5SnVcro6YH9VcJf0Y/XyFAsirxu', 'test11', 2, 1, 2, '127.0.0.1', '2020-10-28 12:53:52', '2022-09-29 11:21:52');
 COMMIT;
 
 -- ----------------------------
