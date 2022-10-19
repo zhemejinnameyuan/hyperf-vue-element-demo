@@ -20,7 +20,7 @@ return [
                 ],
 
                 'formatter' => [
-                    'class' => Monolog\Formatter\LineFormatter::class,
+                    'class' => Monolog\Formatter\JsonFormatter::class,
                     'constructor' => [
                         'format' => null,
                         'dateFormat' => null,
@@ -36,7 +36,7 @@ return [
                 ],
 
                 'formatter' => [
-                    'class' => Monolog\Formatter\LineFormatter::class,
+                    'class' => Monolog\Formatter\JsonFormatter::class,
                     'constructor' => [
                         'format' => null,
                         'dateFormat' => null,
