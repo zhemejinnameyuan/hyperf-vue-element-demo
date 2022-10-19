@@ -65,8 +65,8 @@ router.beforeEach((to, from, next) => {
  * @param {*} route 当前路由
  */
 function fnCurrentRouteType (route, globalRoutes = []) {
-  var temp = []
-  for (var i = 0; i < globalRoutes.length; i++) {
+  let temp = []
+  for (let i = 0; i < globalRoutes.length; i++) {
     if (route.path === globalRoutes[i].path) {
       return 'global'
     } else if (globalRoutes[i].children && globalRoutes[i].children.length >= 1) {
@@ -83,7 +83,7 @@ function fnCurrentRouteType (route, globalRoutes = []) {
  */
 function fnAddDynamicMenuRoutes(menuList = [], routes = []) {
 
-  var newMenu = handleMenuComponent(menuList);
+  let newMenu = handleMenuComponent(menuList);
   //拼装404
   newMenu.concat( { path: '*', redirect: { name: '404' } });
 
@@ -95,16 +95,16 @@ function fnAddDynamicMenuRoutes(menuList = [], routes = []) {
  * 循环处理Component
  */
 function handleMenuComponent(treeNodes) {
-  var newMenu = [];
+  let newMenu = [];
 
-  for (var i = 0, len = treeNodes.length; i < len; i++) {
-    var currentNode = treeNodes[i];
-    var children = currentNode.children;
+  for (let i = 0, len = treeNodes.length; i < len; i++) {
+    let currentNode = treeNodes[i];
+    let children = currentNode.children;
 
-    if(currentNode['show_menu'] == 1){
+    if(currentNode['type'] == 1){
       //处理component
       try {
-        var tmp_component = currentNode['component'];
+        let tmp_component = currentNode['component'];
         if (tmp_component == 'Layout') {
           currentNode['component'] = Layout
         } else {

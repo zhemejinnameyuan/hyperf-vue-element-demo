@@ -167,7 +167,7 @@ class AuthGroupController extends AbstractController
      */
     public function menuTree(): object
     {
-        $dataList = SysMenuModel::getMenuTree(0);
+        $dataList = SysMenuModel::getMenuTree(0, 0);
 
         return response_success('success', $dataList);
     }

@@ -3,7 +3,7 @@
         <el-button v-if="searchData.pid > '0'" type="primary" size="small" @click="$router.back('')">
             <i class="el-icon-back"/>
         </el-button>
-        <el-button type="primary" size="small" @click="handleAdd()" icon="el-icon-plus">新增菜单</el-button>
+        <el-button type="primary" size="small" @click="handleAdd()" icon="el-icon-plus" v-permission="'system:menu:add'">新增菜单</el-button>
 
         <div class="search-container">
             <el-select size="small" v-model="searchData.status" placeholder="状态">
@@ -41,7 +41,13 @@
                 <el-form-item label="id" prop="id">
                     <el-input v-model="dataInfo.id" placeholder="id" disabled/>
                 </el-form-item>
-                <el-form-item label="菜单名称" prop="name">
+                <el-form-item label="类型" prop="type">
+                    <el-radio
+                            v-model="dataInfo.type"
+                            v-for="(item,key) in menuType"
+                            :label="key" >{{item}}</el-radio>
+                </el-form-item>
+                <el-form-item label="名称" prop="name">
                     <el-input v-model="dataInfo.name" placeholder="name" aria-required="true"/>
                 </el-form-item>
                 <el-form-item label="前端路由路径" prop="path">
@@ -61,10 +67,6 @@
                 </el-form-item>
                 <el-form-item label="API地址(换行)" prop="api_path">
                     <el-input v-model="dataInfo.api_path" placeholder="api地址 多个换行" type="textarea"  :rows="6"/>
-                </el-form-item>
-                <el-form-item label="显示/隐藏菜单" prop="show_menu">
-                    <el-radio v-model="dataInfo.show_menu" :label="0">隐藏</el-radio>
-                    <el-radio v-model="dataInfo.show_menu" :label="1">显示</el-radio>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
@@ -109,8 +111,25 @@
                     columns: [
                         {prop: 'id', label: 'ID', width: "80"},
                         {
-                            prop: 'name', label: '菜单名称(点击进入下级)', width: "250", formatter: (row) => {
-                                return '<button type="button" class="el-button el-button--normal el-button--small" onclick="handleRedirect(' + row.id + ')">' + row.name + '</button>';
+                            prop: 'name', label: '名称(点击进入下级)', width: "250", formatter: (row) => {
+                                if(row.type == 1){
+                                    return '<button type="button" class="el-button el-button--normal el-button--small" onclick="handleRedirect(' + row.id + ')">' + row.name + '</button>';
+                                }else{
+                                    return row.name
+                                }
+                            }
+                        },
+                        {prop: 'type', label: '类型', width: "100", formatter: (row) => {
+                                let html='';
+                                switch (row.type) {
+                                    case 1:
+                                        html= "<el-tag class='el-tag el-tag--primary el-tag--light' >菜单</el-tag>";
+                                        break;
+                                    case 2:
+                                        html= "<el-tag class='el-tag el-tag--info el-tag--light' >按钮</el-tag>";
+                                        break;
+                                }
+                                return html;
                             }
                         },
                         {prop: 'path', label: '路由路径', width: "150"},
@@ -124,14 +143,6 @@
                                 }
                             }
                         },
-                        {prop: 'show_menu', label: '显示/隐藏菜单', width: "120", formatter: (row) => {
-                                if (row.show_menu == 1) {
-                                    return "<el-tag class='el-tag el-tag--success el-tag--light' >显示</el-tag>";
-                                } else {
-                                    return '<el-tag class="el-tag el-tag--danger el-tag--light" >隐藏</el-tag>';
-                                }
-                            }
-                        },
                         {prop: 'sort', label: '序号', width: "150"}
                     ],
                     operatesBtn: [
@@ -139,13 +150,15 @@
                             label: '编辑',
                             type: 'normal',
                             functionName: 'edit',
-                            icon: "el-icon-edit"
+                            icon: "el-icon-edit",
+                            permission:'system:menu:edit'
                         },
                         {
                             label: '删除',
                             type: 'danger',
                             functionName: 'delete',
-                            icon: "el-icon-delete"
+                            icon: "el-icon-delete",
+                            permission:'system:menu:delete'
                         },
                         {
                             label: 'API PATH',
@@ -158,6 +171,10 @@
                 searchData: {
                     'pid': 0,
                     'status': -1,
+                },
+                menuType: {
+                    1: '菜单',
+                    2: '按钮',
                 },
                 dialogVisible: false,
                 viewApiPathDialogVisible: false,
@@ -206,7 +223,7 @@
                 this.dialogType = 'new'
                 this.dialogVisible = true
 
-                this.dataInfo = {"id": 0, "status": 1, 'show_menu': 1, 'sort': 0, 'pid': this.searchData.pid}
+                this.dataInfo = {"id": 0, "status": 1, 'type': 1, 'sort': 0, 'pid': this.searchData.pid}
             },
             //编辑
             handleEdit(row) {

@@ -1,13 +1,13 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
 import {Encrypt} from "@/vendor/Aes";
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    buttonPermission:[]
   }
 }
 
@@ -25,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_BUTTON_PERMISSIONS: (state, permissions) => {
+    state.buttonPermission = permissions
   }
 }
 
@@ -57,10 +60,10 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
-
+        const { name, avatar,buttonPermission } = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_BUTTON_PERMISSIONS', buttonPermission)
         resolve(data)
       }).catch(error => {
         reject(error)

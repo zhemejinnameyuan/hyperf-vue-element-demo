@@ -33,6 +33,7 @@
                   size="small"
                   @click="handleCommand(btn.functionName,scope.row)"
                   :icon=btn.icon
+                  v-if="hasPermission(btn.permission)"
           >
             {{btn.label}}
           </el-button>
@@ -57,6 +58,8 @@
   </div>
 </template>
 <script>
+  import {hasPermission} from "../../utils";
+
   export default {
     name: 'CommonTable',
     props: {
@@ -105,6 +108,13 @@
       // 操作按钮
       handleCommand(command, row) {
         this.$emit('handleCommand', command, row);
+      },
+      // 检查权限,
+      hasPermission(key) {
+        if(!key){
+          return true;
+        }
+        return hasPermission(key)
       },
       //下载excel
       exportExcel() {

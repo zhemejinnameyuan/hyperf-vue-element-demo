@@ -1,4 +1,5 @@
 import {MessageBox} from 'element-ui'
+import store from "@/store";
 
 /**
  * 合并json
@@ -50,3 +51,11 @@ export  function jsonToUrlParams(json){
     }).join("&");
 }
 
+/**
+ * 判断是否有按钮级权限
+ */
+export function hasPermission(key) {
+    const list = store.getters.buttonPermission
+    // const list = ['system:menu:add','system:menu:edit','system:menu:delete'];
+    return list.indexOf(key) !== -1
+}

@@ -69,7 +69,7 @@ class MenuController extends AbstractController
     {
         $this->menuRequest->scene('add')->validateResolved();
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'show_menu']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
         //新增
         $result = SysMenuModel::insertData($saveData);
 
@@ -88,7 +88,7 @@ class MenuController extends AbstractController
     {
         $this->menuRequest->scene('update')->validateResolved();
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'show_menu']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
         //更新
         $result = SysMenuModel::updateData($saveData['id'], $saveData);
 

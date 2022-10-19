@@ -41,10 +41,15 @@ class SysMenuModel extends Model
 
     /**
      * 获取菜单.
+     * @param int $type 0-所有，1-菜单，2-按钮
      */
-    public static function getMenuTree(int $userId): array
+    public static function getMenuTree(int $userId, int $type = 0): array
     {
         if ($userId > 0) {
+            $where = '';
+            if ($type) {
+                $where .= "and sys_menu.type='{$type}'";
+            }
             $sql = <<<SQL
 SELECT
 	sys_menu.* 
@@ -54,12 +59,18 @@ FROM
 	INNER JOIN sys_user ON sys_user.group_id = sys_user_group.id 
 WHERE
 	sys_user.id = {$userId} AND sys_menu.status = 1
+	{$where}
 ORDER BY sort asc 	
 SQL;
 
             $dataList = Db::select($sql);
         } else {
             $dataList = parent::query()->where('status', 1)->orderBy('sort')->get()->toArray();
+        }
+
+        if ($type == 2) {
+            //按钮直接返回，不用处理菜单逻辑
+            return $dataList;
         }
 
         return self::handelMenuList($dataList, 0);

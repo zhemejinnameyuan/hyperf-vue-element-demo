@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace App\Controller\Api\Demo;
 
 use App\Controller\AbstractController;
@@ -43,10 +42,11 @@ class ElasticsearchController extends AbstractController
     protected $esClient;
 
     /**
-     * @Inject()
+     * @Inject
      * @var Factory
      */
     protected $fakerFactory;
+
     protected $fakerClass;
 
     public function __construct(ContainerInterface $container)
@@ -92,16 +92,14 @@ class ElasticsearchController extends AbstractController
      */
     public function deleteData()
     {
-
         $params = [
             'index' => 'demo',
             'type' => 'demo_address',
-            'id' => '9'
+            'id' => '9',
         ];
 
         dump($this->fakerClass->address);
         return $this->fakerClass->address;
-
         return $this->esClient->delete($params);
     }
 
@@ -117,11 +115,11 @@ class ElasticsearchController extends AbstractController
         foreach ($arr as $key => $value) {
             $body[] = [
                 'index' => [
-                    '_index'=>'demo',
-                    '_type'=>'demo_address'
+                    '_index' => 'demo',
+                    '_type' => 'demo_address',
                 ],
                 'value' => $this->fakerClass->company,
-                'address' => $this->fakerClass->address
+                'address' => $this->fakerClass->address,
             ];
         }
 
@@ -138,10 +136,9 @@ class ElasticsearchController extends AbstractController
      */
     public function suggestions()
     {
-
         $keyWord = $this->request->input('keyword', '金沙');
 
-        if (!$keyWord) {
+        if (! $keyWord) {
             return response_error('请输入关键词');
         }
         //多个字段查询

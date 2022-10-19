@@ -54,11 +54,15 @@ class UserController extends AbstractController
      */
     public function info(): object
     {
+        //按钮权限
+        $buttonPermission = SysMenuModel::getMenuTree($this->getUserId(), 2);
+        $buttonPermission = $buttonPermission ? array_column($buttonPermission, 'component') : [];
         $info = [
             'roles' => ['admin'],
-            'introduction' => 'I am a super administrator',
-            'avatar' => 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+            'introduction' => '',
+            'avatar' => '',
             'name' => $this->jwt->getParserData()['username'],
+            'buttonPermission' => $buttonPermission,
         ];
 
         return response_success('success', $info);
@@ -70,7 +74,7 @@ class UserController extends AbstractController
      */
     public function getMenuList(): object
     {
-        $menuOriData = SysMenuModel::getMenuTree($this->getUserId());
+        $menuOriData = SysMenuModel::getMenuTree($this->getUserId(), 1);
         return response_success('success', $menuOriData);
     }
 }
