@@ -41,7 +41,9 @@ class SysMenuModel extends Model
 
     /**
      * 获取菜单.
+     * @param int $userId
      * @param int $type 0-所有，1-菜单，2-按钮
+     * @return array
      */
     public static function getMenuTree(int $userId, int $type = 0): array
     {

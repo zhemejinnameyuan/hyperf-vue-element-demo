@@ -17,28 +17,27 @@ import '@/permission' // permission control
 //转盘抽奖
 import lottery from 'vue-lottery'
 import {hasPermission} from "@/utils";
-Vue.use(lottery)
+Vue.use(lottery);
 
-Vue.use(ElementUI)
+Vue.use(ElementUI);
 
 
 // 注册一个全局自定义指令 `v-permission`
 Vue.directive('permission', {
-  inserted: (el, binding, vnode) => {
-    console.log(el)
-    const permission = binding.value
-    const result = hasPermission(permission)
+  inserted: (el, binding) => {
+    const permission = binding.value;
+    const result = hasPermission(permission);
     if (!result) {
-      el.parentNode && el.parentNode.removeChild(el)
+      el.parentNode && el.parentNode.removeChild(el);
     }
   }
-})
+});
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   el: '#app',
   router,
   store,
   render: h => h(App)
-})
+});

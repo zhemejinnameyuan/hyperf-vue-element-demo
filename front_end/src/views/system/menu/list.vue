@@ -37,15 +37,15 @@
 
         <!--模态框-->
         <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑菜单':'新增菜单'">
-            <el-form :model="dataInfo" :rules="rules" ref="ruleForm" label-width="120px" label-position="left">
+            <el-form :model="dataInfo" :rules="rules" ref="ruleForm" label-width="150px" label-position="left">
                 <el-form-item label="id" prop="id">
                     <el-input v-model="dataInfo.id" placeholder="id" disabled/>
                 </el-form-item>
                 <el-form-item label="类型" prop="type">
-                    <el-radio
-                            v-model="dataInfo.type"
-                            v-for="(item,key) in menuType"
-                            :label="key" >{{item}}</el-radio>
+                    <el-radio-group v-model="dataInfo.type" @change="typeChange">
+                        <el-radio :label="1" >菜单</el-radio>
+                        <el-radio :label="2" >按钮</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dataInfo.name" placeholder="name" aria-required="true"/>
@@ -59,7 +59,7 @@
                 <el-form-item label="重定向" prop="redirect">
                     <el-input v-model="dataInfo.redirect" placeholder="redirect"/>
                 </el-form-item>
-                <el-form-item label="组件(视图路径)" prop="component">
+                <el-form-item label="视图组件/按钮权限" prop="component">
                     <el-input v-model="dataInfo.component" placeholder="如:form/index" aria-required="true"/>
                 </el-form-item>
                 <el-form-item label="序号" prop="sort">
@@ -72,8 +72,6 @@
                     <el-radio v-model="dataInfo.status" :label="0">禁用</el-radio>
                     <el-radio v-model="dataInfo.status" :label="1">启用</el-radio>
                 </el-form-item>
-
-
             </el-form>
             <div style="text-align:right;">
                 <el-button type="danger" @click="cancelForm('ruleForm')">关闭</el-button>
@@ -172,10 +170,6 @@
                     'pid': 0,
                     'status': -1,
                 },
-                menuType: {
-                    1: '菜单',
-                    2: '按钮',
-                },
                 dialogVisible: false,
                 viewApiPathDialogVisible: false,
                 apiPathContent: '1',
@@ -206,6 +200,9 @@
             }
         },
         methods: {
+            typeChange(value){
+                console.log(value)
+            },
             getPid() {
                 if (this.$route.query.pid === undefined) {
                     this.searchData.pid = 0;
