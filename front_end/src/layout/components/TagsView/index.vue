@@ -45,7 +45,7 @@ export default {
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
-      return this.$store.state.permission.routes
+      return this.$router.options.routes;
     }
   },
   watch: {
@@ -111,18 +111,20 @@ export default {
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+      if(typeof(tags) != "undefined"){
+        this.$nextTick(() => {
+          for (const tag of tags) {
+            if (tag.to.path === this.$route.path) {
+              this.$refs.scrollPane.moveToTarget(tag)
+              // when query is different then update
+              if (tag.to.fullPath !== this.$route.fullPath) {
+                this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+              }
+              break
             }
-            break
           }
-        }
-      })
+        })
+      }
     },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
