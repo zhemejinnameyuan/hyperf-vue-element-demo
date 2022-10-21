@@ -59,6 +59,7 @@
     import {addType, deleteType, getType, updateType} from "../../api/hotArticle/type";
 
     export default {
+        name: 'HotArticleType',
         components: {CommonTable},
         data() {
             return {

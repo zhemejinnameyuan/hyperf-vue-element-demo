@@ -12,6 +12,7 @@
     import {Decrypt, Encrypt} from "../../vendor/Aes";
 
     export default {
+        name: 'DemoAes',
         data() {
             return {
                 oriData: 'hyperf-admin',

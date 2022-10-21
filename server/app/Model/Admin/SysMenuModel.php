@@ -134,7 +134,7 @@ SQL;
             if ($value['pid'] == $pid) {
                 //拼装meta
                 $value['meta'] = [
-                    'title' => $value['name'],
+                    'title' => $value['title'],
                     'icon' => $value['icon'],
                 ];
                 unset($value['icon']);

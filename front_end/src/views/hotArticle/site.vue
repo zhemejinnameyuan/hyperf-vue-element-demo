@@ -113,6 +113,7 @@
     import {getOptionList} from "../../api/hotArticle/type";
 
     export default {
+        name: 'HotArticleSite',
         components: {CommonTable},
         data() {
             return {

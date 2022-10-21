@@ -57,6 +57,7 @@
     import {getOperateLog, getOperateBusinessType} from "../../../api/system/operateLog";
 
     export default {
+        name: 'SystemOperateLogList',
         components: {CommonTable},
         data() {
             return {

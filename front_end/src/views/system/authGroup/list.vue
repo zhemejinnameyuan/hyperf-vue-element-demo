@@ -80,6 +80,7 @@
     import {addAuthGroup, deleteAuthGroup, getAuthGroup, getMenuTree, refreshNode, updateAuthGroup} from "../../../api/system/authGroup";
 
     export default {
+        name: 'SystemAuthGroupList',
         components: {CommonTable},
         data() {
             return {

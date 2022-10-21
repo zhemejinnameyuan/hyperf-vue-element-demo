@@ -29,6 +29,7 @@
     import {getInputSuggestions} from "../../api/demo/suggestions";
 
     export default {
+        name: 'DemoSuggestions',
         data() {
             return {
                 input_search_value: '',

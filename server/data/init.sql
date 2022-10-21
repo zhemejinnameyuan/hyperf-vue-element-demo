@@ -179,7 +179,8 @@ DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `pid` int unsigned DEFAULT '0' COMMENT '父级ID',
-  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '名称',
+  `title` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '名称',
+  `name` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT 'vue视图名字',
   `type` tinyint unsigned DEFAULT NULL COMMENT '类型,1-菜单,2-按钮',
   `path` char(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '路由path',
   `api_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '后端api地址,用于后端权限控制',
@@ -197,24 +198,24 @@ CREATE TABLE `sys_menu` (
 -- Records of sys_menu
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_menu` VALUES (1, 0, '首页', 1, '/', '', 'dashboard', 'Layout', '/dashboard', 1, 1, '2020-10-22 14:41:11', '2022-10-19 12:18:36');
-INSERT INTO `sys_menu` VALUES (2, 0, '系统设置', 1, '/system', NULL, 'el-icon-setting', 'Layout', '', 2, 1, '2020-10-22 14:41:11', '2022-09-28 10:15:18');
-INSERT INTO `sys_menu` VALUES (3, 2, '菜单管理', 1, 'menu', '/api/system/menu', 'el-icon-menu', 'system/menu/list', '', 0, 1, '2020-10-22 14:41:11', '2022-10-03 11:05:25');
-INSERT INTO `sys_menu` VALUES (4, 2, '用户管理', 1, 'user', '/api/system/user', 'el-icon-user', 'system/user/list', '', 9, 1, '2020-10-22 22:42:49', '2022-10-03 16:33:51');
-INSERT INTO `sys_menu` VALUES (5, 1, '系统信息', 1, 'dashboard', '/api/public/systemInfo\n', 'dashboard', 'dashboard/index', '', 0, 1, '2020-11-04 17:27:14', '2022-10-03 16:31:45');
-INSERT INTO `sys_menu` VALUES (6, 2, '权限分组', 1, 'authGroup', '/api/system/authGroup\n/api/system/authGroup/optionList\n/api/system/authGroup/menuTree\n/api/system/authGroup/refreshNode', 'el-icon-s-check', 'system/authGroup/list', '', 2, 1, '2020-11-06 21:05:53', '2022-10-03 16:33:27');
-INSERT INTO `sys_menu` VALUES (7, 2, '操作日志', 1, 'operateLog', '/api/system/operateLog\n/api/system/operateLog/businessType', 'el-icon-tickets', 'system/operateLog/list', NULL, 99, 1, '2020-11-10 17:17:07', '2022-10-09 17:18:56');
-INSERT INTO `sys_menu` VALUES (23, 2, '配置管理', 1, 'config', '/api/system/config', 'el-icon-setting', 'system/config/list', NULL, 9, 1, '2020-11-12 12:05:40', '2022-10-03 16:35:05');
-INSERT INTO `sys_menu` VALUES (24, 0, 'Demo', 1, '/demo', NULL, ' el-icon-magic-stick', 'Layout', NULL, 3, 1, '2020-11-13 11:22:30', '2022-09-28 10:15:26');
-INSERT INTO `sys_menu` VALUES (25, 24, '输入建议', 1, 'suggestions', NULL, 'el-icon-s-order', 'demo/suggestions', NULL, 0, 1, '2020-11-13 11:30:24', '2020-11-13 11:30:24');
-INSERT INTO `sys_menu` VALUES (27, 24, '签到', 1, 'sign', NULL, 'el-icon-s-order', 'demo/sign', NULL, 0, 1, '2020-11-23 15:14:43', '2020-11-23 15:14:51');
-INSERT INTO `sys_menu` VALUES (28, 24, 'AES解密', 1, 'aes', NULL, 'el-icon-s-order', 'demo/aes', NULL, 0, 1, '2020-11-26 22:06:38', '2020-11-26 22:06:51');
-INSERT INTO `sys_menu` VALUES (30, 0, '今日热榜', 1, '/hotArticle', NULL, 'el-icon-magic-stick', 'Layout', NULL, 4, 1, '2020-12-29 12:23:17', '2022-09-28 17:43:35');
-INSERT INTO `sys_menu` VALUES (31, 30, '网站分类', 1, 'type', '/api/hotArticle/site\n/api/hotArticle/site/optionList ', 'el-icon-s-order', 'hotArticle/type', NULL, 0, 1, '2020-12-29 12:24:15', '2022-10-03 16:36:42');
-INSERT INTO `sys_menu` VALUES (32, 30, '网站管理', 1, 'site', '/api/hotArticle/site\n/api/hotArticle/site/runSite', 'el-icon-s-order', 'hotArticle/site', NULL, 0, 1, '2020-12-29 12:35:30', '2022-10-03 16:37:14');
-INSERT INTO `sys_menu` VALUES (35, 3, '新增菜单', 2, '/', NULL, NULL, 'system:menu:add', NULL, 0, 1, '2022-10-19 15:53:16', '2022-10-19 15:56:38');
-INSERT INTO `sys_menu` VALUES (36, 3, '编辑菜单', 2, '/', NULL, NULL, 'system:menu:edit', NULL, 0, 1, '2022-10-19 15:56:34', '2022-10-19 15:56:34');
-INSERT INTO `sys_menu` VALUES (37, 3, '删除菜单', 2, '/', NULL, NULL, 'system:menu:delete', NULL, 0, 1, '2022-10-19 15:57:10', '2022-10-19 15:57:10');
+INSERT INTO `sys_menu` VALUES (1, 0, '首页', '', 1, '/dashboard', '', 'dashboard', 'Layout', '', 1, 1, '2020-10-22 14:41:11', '2022-10-19 12:18:36');
+INSERT INTO `sys_menu` VALUES (2, 0, '系统设置', '', 1, '/system', NULL, 'el-icon-setting', 'Layout', '', 2, 1, '2020-10-22 14:41:11', '2022-09-28 10:15:18');
+INSERT INTO `sys_menu` VALUES (3, 2, '菜单管理', 'SystemMenuList', 1, 'menu', '/api/system/menu', 'el-icon-menu', 'system/menu/list', '', 0, 1, '2020-10-22 14:41:11', '2022-10-03 11:05:25');
+INSERT INTO `sys_menu` VALUES (4, 2, '用户管理', 'SystemUserList', 1, 'user', '/api/system/user', 'el-icon-user', 'system/user/list', '', 9, 1, '2020-10-22 22:42:49', '2022-10-03 16:33:51');
+INSERT INTO `sys_menu` VALUES (5, 1, '系统信息', 'Dashboard', 1, 'dashboard', '/api/public/systemInfo\n', 'dashboard', 'dashboard/index', '', 0, 1, '2020-11-04 17:27:14', '2022-10-03 16:31:45');
+INSERT INTO `sys_menu` VALUES (6, 2, '权限分组', 'SystemAuthGroupList', 1, 'authGroup', '/api/system/authGroup\n/api/system/authGroup/optionList\n/api/system/authGroup/menuTree\n/api/system/authGroup/refreshNode', 'el-icon-s-check', 'system/authGroup/list', '', 2, 1, '2020-11-06 21:05:53', '2022-10-03 16:33:27');
+INSERT INTO `sys_menu` VALUES (7, 2, '操作日志', 'SystemOperateLogList', 1, 'operateLog', '/api/system/operateLog\n/api/system/operateLog/businessType', 'el-icon-tickets', 'system/operateLog/list', NULL, 99, 1, '2020-11-10 17:17:07', '2022-10-09 17:18:56');
+INSERT INTO `sys_menu` VALUES (23, 2, '配置管理', 'SystemConfigList', 1, 'config', '/api/system/config', 'el-icon-setting', 'system/config/list', NULL, 9, 1, '2020-11-12 12:05:40', '2022-10-03 16:35:05');
+INSERT INTO `sys_menu` VALUES (24, 0, 'Demo', '', 1, '/demo', NULL, ' el-icon-magic-stick', 'Layout', NULL, 3, 1, '2020-11-13 11:22:30', '2022-09-28 10:15:26');
+INSERT INTO `sys_menu` VALUES (25, 24, '输入建议', 'DemoSuggestions', 1, 'suggestions', NULL, 'el-icon-s-order', 'demo/suggestions', NULL, 0, 1, '2020-11-13 11:30:24', '2020-11-13 11:30:24');
+INSERT INTO `sys_menu` VALUES (27, 24, '签到', 'DemoSign', 1, 'sign', NULL, 'el-icon-s-order', 'demo/sign', NULL, 0, 1, '2020-11-23 15:14:43', '2020-11-23 15:14:51');
+INSERT INTO `sys_menu` VALUES (28, 24, 'AES解密', 'DemoAes', 1, 'aes', NULL, 'el-icon-s-order', 'demo/aes', NULL, 0, 1, '2020-11-26 22:06:38', '2020-11-26 22:06:51');
+INSERT INTO `sys_menu` VALUES (30, 0, '今日热榜', '', 1, '/hotArticle', NULL, 'el-icon-magic-stick', 'Layout', NULL, 4, 1, '2020-12-29 12:23:17', '2022-09-28 17:43:35');
+INSERT INTO `sys_menu` VALUES (31, 30, '网站分类', 'HotArticleType', 1, 'type', '/api/hotArticle/site\n/api/hotArticle/site/optionList ', 'el-icon-s-order', 'hotArticle/type', NULL, 0, 1, '2020-12-29 12:24:15', '2022-10-03 16:36:42');
+INSERT INTO `sys_menu` VALUES (32, 30, '网站管理', 'HotArticleSite', 1, 'site', '/api/hotArticle/site\n/api/hotArticle/site/runSite', 'el-icon-s-order', 'hotArticle/site', NULL, 0, 1, '2020-12-29 12:35:30', '2022-10-03 16:37:14');
+INSERT INTO `sys_menu` VALUES (35, 3, '新增菜单', '', 2, '/', NULL, NULL, 'system:menu:add', NULL, 0, 1, '2022-10-19 15:53:16', '2022-10-19 15:56:38');
+INSERT INTO `sys_menu` VALUES (36, 3, '编辑菜单', '', 2, '/', NULL, NULL, 'system:menu:edit', NULL, 0, 1, '2022-10-19 15:56:34', '2022-10-19 15:56:34');
+INSERT INTO `sys_menu` VALUES (37, 3, '删除菜单', '', 2, '/', NULL, NULL, 'system:menu:delete', NULL, 0, 1, '2022-10-19 15:57:10', '2022-10-19 15:57:10');
 COMMIT;
 
 -- ----------------------------

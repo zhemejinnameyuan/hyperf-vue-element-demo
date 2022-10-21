@@ -66,6 +66,7 @@
     import {addConfig, deleteConfig, getConfig, saveConfig, updateConfig} from "../../../api/system/config";
 
     export default {
+        name: 'SystemConfigList',
         components: {CommonTable},
         data() {
             return {

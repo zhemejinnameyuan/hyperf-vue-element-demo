@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace App\Controller\Api\System;
 
 use App\Constants\OpBusinessType;
@@ -69,12 +70,12 @@ class MenuController extends AbstractController
     {
         $this->menuRequest->scene('add')->validateResolved();
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'title', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
         //新增
         $result = SysMenuModel::insertData($saveData);
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '新增菜单:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '新增菜单:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -88,12 +89,12 @@ class MenuController extends AbstractController
     {
         $this->menuRequest->scene('update')->validateResolved();
 
-        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
+        $saveData = $this->request->inputs(['component', 'redirect', 'icon', 'id', 'name', 'title', 'path', 'pid', 'status', 'sort', 'api_path', 'type']);
         //更新
         $result = SysMenuModel::updateData($saveData['id'], $saveData);
 
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $saveData['id'], '更新菜单:' . json_encode($saveData));
+            $this->addOpLog($this->opBusinessType, (int)$saveData['id'], '更新菜单:' . json_encode($saveData));
             return response_success();
         }
         return response_error();
@@ -115,7 +116,7 @@ class MenuController extends AbstractController
 
         $result = SysMenuModel::query()->where('id', $id)->delete();
         if ($result !== false) {
-            $this->addOpLog($this->opBusinessType, (int) $id, '删除菜单');
+            $this->addOpLog($this->opBusinessType, (int)$id, '删除菜单');
             return response_success();
         }
         return response_error();

@@ -47,8 +47,11 @@
                         <el-radio :label="2" >按钮</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="名称" prop="name">
-                    <el-input v-model="dataInfo.name" placeholder="name" aria-required="true"/>
+                <el-form-item label="名称" prop="title">
+                    <el-input v-model="dataInfo.title" placeholder="title" aria-required="true"/>
+                </el-form-item>
+                <el-form-item label="Vue Name" prop="name">
+                    <el-input v-model="dataInfo.name" placeholder="name" />
                 </el-form-item>
                 <el-form-item label="前端路由路径" prop="path">
                     <el-input v-model="dataInfo.path" placeholder="path" aria-required="true"/>
@@ -93,6 +96,7 @@
     import {getMenu, deleteMenu, addMenu, updateMenu} from "../../../api/system/menu";
 
     export default {
+        name: 'SystemMenuList',
         components: {CommonTable},
         data() {
             return {
@@ -109,9 +113,9 @@
                     columns: [
                         {prop: 'id', label: 'ID', width: "80"},
                         {
-                            prop: 'name', label: '名称(点击进入下级)', width: "250", formatter: (row) => {
+                            prop: 'title', label: '名称(点击进入下级)', width: "200", formatter: (row) => {
                                 if(row.type == 1){
-                                    return '<button type="button" class="el-button el-button--normal el-button--small" onclick="handleRedirect(' + row.id + ')">' + row.name + '</button>';
+                                    return '<button type="button" class="el-button el-button--normal el-button--small" onclick="handleRedirect(' + row.id + ')">' + row.title + '</button>';
                                 }else{
                                     return row.name
                                 }
@@ -132,8 +136,9 @@
                         },
                         {prop: 'path', label: '路由路径', width: "150"},
                         {prop: 'redirect', label: '重定向', width: "150"},
-                        {prop: 'component', label: '组件(视图路径)', width: "250"},
-                        {prop: 'status', label: '状态', width: "100", formatter: (row) => {
+                        {prop: 'component', label: '视图路径/按钮权限', width: "200"},
+                        {prop: 'name', label: 'Vue Name', width: "250"},
+                        {prop: 'status', label: '状态', width: "80", formatter: (row) => {
                                 if (row.status == 1) {
                                     return "<el-tag class='el-tag el-tag--success el-tag--light' >启用</el-tag>";
                                 } else {
@@ -141,7 +146,7 @@
                                 }
                             }
                         },
-                        {prop: 'sort', label: '序号', width: "150"}
+                        {prop: 'sort', label: '序号', width: "100"}
                     ],
                     operatesBtn: [
                         {
@@ -176,7 +181,7 @@
                 dialogType: 'new',
                 dataInfo: [],
                 rules: {
-                    name: [{required: true, message: '请输入菜单名称', trigger: 'blur'}],
+                    title: [{required: true, message: '请输入菜单名称', trigger: 'blur'}],
                     path: [{required: true, message: '请输入路由路径', trigger: 'blur'}],
                     component: [{required: true, message: '请输入组件', trigger: 'blur'}]
                 },

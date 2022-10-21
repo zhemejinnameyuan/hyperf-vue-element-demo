@@ -96,6 +96,7 @@
     import {getUserGroupOptionDataList, deleteUser, getUser, updateUser, addUser} from "../../../api/system/user";
 
     export default {
+        name: 'SystemUserList',
         components: {CommonTable},
         data() {
             return {

@@ -25,6 +25,7 @@
     import {doSign, getSignDays} from "../../api/demo/sign";
 
     export default {
+        name: 'DemoSign',
         data() {
             return {
                 calendar: {
