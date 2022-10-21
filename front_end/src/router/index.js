@@ -9,24 +9,6 @@ const _import = require('./import-' + process.env.NODE_ENV)
 /* Layout */
 import Layout from '@/layout'
 import {getMenuList} from "@/api/router";
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
 
 //全局路由(无需嵌套上左右整体布局)
 const globalRoutes = [
@@ -73,21 +55,26 @@ const router = new Router({
 
 
 
-
+window.localStorage.setItem('storageMenu', '0')
 router.beforeEach((to, from, next) => {
-  if (router.options.isAddDynamicMenuRoutes || fnCurrentRouteType(to, globalRoutes) === 'global') {
+  if (fnCurrentRouteType(to, globalRoutes) === 'global') {
     next()
   } else {
-    getMenuList().then(response => {
-      if (response && response.code === 0) {
-        fnAddDynamicMenuRoutes(response.data)
-        next({ ...to, replace: true })
-      }
-    }).catch((e) => {
-      console.log(`%c${e} 请求菜单列表和权限失败，跳转至登录页！！`, 'color:blue')
-      router.push({ name: 'login' })
-    })
-    next()
+    if (window.localStorage.getItem('storageMenu') === '0') {
+      getMenuList().then(response => {
+        if (response && response.code === 0) {
+          window.localStorage.setItem('storageMenu', '1')
+          fnAddDynamicMenuRoutes(response.data)
+          next({ ...to, replace: true })
+        }
+      }).catch((e) => {
+        console.log(`%c${e} 请求菜单列表和权限失败，跳转至登录页！！`, 'color:blue')
+        router.push({name: 'login'})
+      })
+      next()
+    }else{
+      next()
+    }
   }
 })
 
