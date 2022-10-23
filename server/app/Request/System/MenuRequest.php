@@ -19,8 +19,8 @@ use Hyperf\Validation\Request\FormRequest;
 class MenuRequest extends FormRequest
 {
     protected $scenes = [
-        'add' => ['name', 'path', 'component'],
-        'update' => ['id', 'name', 'path', 'component'],
+        'add' => ['title', 'path', 'component'],
+        'update' => ['id', 'title', 'path', 'component'],
         'delete' => ['id'],
     ];
 
@@ -39,7 +39,7 @@ class MenuRequest extends FormRequest
     {
         return [
             'id.required' => '缺少ID参数',
-            'name.required' => '菜单名称不能为空',
+            'title.required' => '菜单名称不能为空',
             'path.required' => '前端路由路径 不能为空',
             'component.required' => '组件(视图路径) 不能为空',
         ];

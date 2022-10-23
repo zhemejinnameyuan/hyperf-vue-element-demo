@@ -50,25 +50,25 @@
                 <el-form-item label="名称" prop="title">
                     <el-input v-model="dataInfo.title" placeholder="title" aria-required="true"/>
                 </el-form-item>
-                <el-form-item label="Vue Name" prop="name">
+                <el-form-item label="Vue Name" prop="name" v-show="dataInfo.type == 1">
                     <el-input v-model="dataInfo.name" placeholder="name" />
                 </el-form-item>
                 <el-form-item label="前端路由路径" prop="path">
                     <el-input v-model="dataInfo.path" placeholder="path" aria-required="true"/>
                 </el-form-item>
-                <el-form-item label="菜单icon" prop="icon">
+                <el-form-item label="菜单icon" prop="icon" v-show="dataInfo.type == 1">
                     <el-input v-model="dataInfo.icon" placeholder="icon"/>
                 </el-form-item>
-                <el-form-item label="重定向" prop="redirect">
+                <el-form-item label="重定向" prop="redirect" v-show="dataInfo.type == 1">
                     <el-input v-model="dataInfo.redirect" placeholder="redirect"/>
                 </el-form-item>
-                <el-form-item label="视图组件/按钮权限" prop="component">
+                <el-form-item :label="dataInfo.type == 1 ? '视图组件':'按钮权限'" prop="component">
                     <el-input v-model="dataInfo.component" placeholder="如:form/index" aria-required="true"/>
                 </el-form-item>
                 <el-form-item label="序号" prop="sort">
                     <el-input v-model="dataInfo.sort" placeholder="sort"/>
                 </el-form-item>
-                <el-form-item label="API地址(换行)" prop="api_path">
+                <el-form-item label="API地址(换行)" prop="api_path" v-show="dataInfo.type == 1">
                     <el-input v-model="dataInfo.api_path" placeholder="api地址 多个换行" type="textarea"  :rows="6"/>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
@@ -117,7 +117,7 @@
                                 if(row.type == 1){
                                     return '<button type="button" class="el-button el-button--normal el-button--small" onclick="handleRedirect(' + row.id + ')">' + row.title + '</button>';
                                 }else{
-                                    return row.name
+                                    return row.title
                                 }
                             }
                         },
