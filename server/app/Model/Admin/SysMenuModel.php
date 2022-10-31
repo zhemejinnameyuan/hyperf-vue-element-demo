@@ -75,7 +75,7 @@ SQL;
             return $dataList;
         }
 
-        return self::handelMenuList($dataList, 0);
+        return self::handleMenuList($dataList, 0);
     }
 
     /**
@@ -127,7 +127,7 @@ SQL;
     /**
      * 处理菜单层级.
      */
-    protected static function handelMenuList(array $menuList, int $pid): array
+    protected static function handleMenuList(array $menuList, int $pid): array
     {
         $tree = [];
         foreach ($menuList as $key => $value) {
@@ -137,10 +137,12 @@ SQL;
                     'title' => $value['title'],
                     'icon' => $value['icon'],
                 ];
+
+                $value['name']=$value['title'];
                 unset($value['icon']);
 
                 //拼装子级
-                $value['children'] = self::handelMenuList($menuList, $value['id']);
+                $value['children'] = self::handleMenuList($menuList, $value['id']);
 
                 $tree[] = $value;
             }
